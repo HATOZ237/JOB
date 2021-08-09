@@ -29,24 +29,19 @@ from scoop import futures
 from multiprocessing import Process
 import multiprocessing
 
-def evalOneMax(value):
-    kernel = ["linear", "rbf", "poly","sigmoid"]
-    while value[1] < -1.5:
-        value[1] = value[1]/2   
-    while value[0] > 1.9:
-        value[0] = value[0]/2
-    model = SVC(C = 10**(3*value[0]), gamma=10**(-3*value[1]), kernel=kernel[round(abs(value[2]*4))%3])
-    scores = cross_val_score(model, x_train, y_train, cv = 4, n_jobs=-1)
-        #print(value)
-    return scores.mean(), #Add a comma even if there is only one return value
 
-def score(value):
-    kernel = ["linear", "rbf", "poly","sigmoid"]
-    model = SVC(C = 10**(3*value[0]), gamma=10**(-3*value[1]), kernel=kernel[round(abs(value[2]*4))%3])
-    model.fit(x_train, y_train)
-    return model.score(x_test, y_test)
 
 def main():
+    random.seed(100000)
+    np.random.seed(100000)
+    datasets = [load_breast_cancer(), load_digits(), load_iris(), load_wine()]#, load_linnerud
+    names = ['load_breast_cancer', 'load_digits', 'load_iris', "load_wine"]# 'load_linnerud'
+    data_s = [None for i in range(len(datasets))]
+    target_s = [None for i in range(len(datasets))]
+    target_names = [None for i in range(len(datasets))]
+    feature_names = [None for i in range(len(datasets))]
+    description  = [None for i in range(len(datasets))]
+    x_train, x_test, y_train, y_test = [0]*4
     
     for i, dataset in enumerate(datasets):
         data_s[i] = dataset.data
@@ -68,6 +63,23 @@ def main():
     
 
     kernel = ["linear", "rbf", "poly","sigmoid"]
+    
+    def evalOneMax(value):
+        kernel = ["linear", "rbf", "poly","sigmoid"]
+        while value[1] < -1.5:
+            value[1] = value[1]/2   
+        while value[0] > 1.9:
+            value[0] = value[0]/2
+        model = SVC(C = 10**(3*value[0]), gamma=10**(-3*value[1]), kernel=kernel[round(abs(value[2]*4))%3])
+        scores = cross_val_score(model, x_train, y_train, cv = 4, n_jobs=-1)
+            #print(value)
+        return scores.mean(), #Add a comma even if there is only one return value
+
+    def score(value):
+        kernel = ["linear", "rbf", "poly","sigmoid"]
+        model = SVC(C = 10**(3*value[0]), gamma=10**(-3*value[1]), kernel=kernel[round(abs(value[2]*4))%3])
+        model.fit(x_train, y_train)
+        return model.score(x_test, y_test)
 
     creator.create("FitnessMax", base.Fitness, weights=(1.0,)) #Add a comma even if there is only one argument
     creator.create("Individual", list, fitness=creator.FitnessMax)
@@ -138,14 +150,5 @@ def main():
         pd.DataFrame(cma_results).to_csv(f"CMA-SVC-{str(total*10)}")
 
 if __name__ == "__main__":
-    random.seed(100000)
-    np.random.seed(100000)
-    datasets = [load_breast_cancer(), load_digits(), load_iris(), load_wine()]#, load_linnerud
-    names = ['load_breast_cancer', 'load_digits', 'load_iris', "load_wine"]# 'load_linnerud'
-    data_s = [None for i in range(len(datasets))]
-    target_s = [None for i in range(len(datasets))]
-    target_names = [None for i in range(len(datasets))]
-    feature_names = [None for i in range(len(datasets))]
-    description  = [None for i in range(len(datasets))]
-    x_train, x_test, y_train, y_test = [0]*4
+    
     main()
