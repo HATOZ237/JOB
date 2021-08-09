@@ -30,6 +30,7 @@ from multiprocessing import Process
 import multiprocessing
 
 def evalOneMax(value):
+    kernel = ["linear", "rbf", "poly","sigmoid"]
     while value[1] < -1.5:
         value[1] = value[1]/2   
     while value[0] > 1.9:
@@ -40,6 +41,7 @@ def evalOneMax(value):
     return scores.mean(), #Add a comma even if there is only one return value
 
 def score(value):
+    kernel = ["linear", "rbf", "poly","sigmoid"]
     model = SVC(C = 10**(3*value[0]), gamma=10**(-3*value[1]), kernel=kernel[round(abs(value[2]*4))%3])
     model.fit(x_train, y_train)
     return model.score(x_test, y_test)
