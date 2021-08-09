@@ -116,14 +116,14 @@ for total in [1, 5, 10, 25, 50, 100, 125, 150, 175, 200, 250]:
         train_liste = [0 for _ in range(turn)]
         test_liste = [0 for _ in range(turn)]
         time_liste = [0 for _ in range(turn)]
-        #print("------------------- Data : "+names[i]+" ------------------------") 
+        print("------------------- Data : "+names[i]+" ------------------------") 
         best2 = 0
         best_score = 0
         for k in range(turn):
             strategy = cma.Strategy(centroid=[0,0,0], sigma=0.5, lambda_ = 10)
             toolbox.register("generate", strategy.generate, creator.Individual)
             toolbox.register("update", strategy.update)
-            print("--------turn : "+ str(k+1)+"---------")
+            #print("--------turn : "+ str(k+1)+"---------")
             start = time()
             pops = algorithms.eaGenerateUpdate(toolbox, ngen=NGEN, stats=stats, halloffame=hof2, verbose = False)
             #print(len(pops[0]))
