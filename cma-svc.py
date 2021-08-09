@@ -27,7 +27,7 @@ from statistics import *
 from deap import cma
 from scoop import futures
 
- def evalOneMax(value):
+def evalOneMax(value):
     while value[1] < -1.5:
         value[1] = value[1]/2   
     while value[0] > 1.9:
@@ -37,7 +37,7 @@ from scoop import futures
         #print(value)
     return scores.mean(), #Add a comma even if there is only one return value
 
- def score(value):
+def score(value):
     model = SVC(C = 10**(3*value[0]), gamma=10**(-3*value[1]), kernel=kernel[round(abs(value[2]*4))%3])
     model.fit(x_train, y_train)
     return model.score(x_test, y_test)
