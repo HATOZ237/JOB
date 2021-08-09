@@ -27,79 +27,78 @@ from statistics import *
 from deap import cma
 from scoop import futures
 
-
-random.seed(100000)
-np.random.seed(100000)
-datasets = [load_breast_cancer(), load_digits(), load_iris(), load_wine()]#, load_linnerud
-names = ['load_breast_cancer', 'load_digits', 'load_iris', "load_wine"]# 'load_linnerud'
-data_s = [None for i in range(len(datasets))]
-target_s = [None for i in range(len(datasets))]
-target_names = [None for i in range(len(datasets))]
-feature_names = [None for i in range(len(datasets))]
-description  = [None for i in range(len(datasets))]
-for i, dataset in enumerate(datasets):
-    data_s[i] = dataset.data
-    target_s[i] = dataset.target
-    pocket = list(zip(data_s[i], target_s[i]))
-   # print(pocket)
-    shuffle(pocket)
-    data_s[i] = [x[0] for x in pocket]
-    target_s[i] = [x[1] for x in pocket]
-    feature_names[i] = dataset.feature_names
-    description[i] = dataset.DESCR
-    target_names[i] = dataset.target_names
-    
-    
-#svc
-n_iter = 0
-func_seq = [lambda:random.gauss(0,0.5) , lambda:random.gauss(0,0.5), lambda:random.random()]
-
-x_train, x_test, y_train, y_test = [0]*4
-
-kernel = ["linear", "rbf", "poly","sigmoid"]
-
-creator.create("FitnessMax", base.Fitness, weights=(1.0,)) #Add a comma even if there is only one argument
-creator.create("Individual", list, fitness=creator.FitnessMax)
-toolbox = base.Toolbox()
-# Attribute generator
-# Structure initializers
-toolbox.register("individual", tools.initCycle, creator.Individual, 
-    func_seq, n=1)
-toolbox.register("population", tools.initRepeat, list, toolbox.individual)                       
-
-toolbox.register("mate", tools.cxTwoPoint)
-toolbox.register("mutate", tools.mutGaussian,mu = 0,sigma = 0.5, indpb=0.2)
-toolbox.register("select", tools.selBest)
-toolbox.register("map", futures.map)
-#pool = multiprocessing.Pool()
-#toolbox.register("map", pool.map)
-
-def evalOneMax(value):
-    global n_iter 
-    n_iter = n_iter+1
-    #lock = value[1]
+ def evalOneMax(value):
     while value[1] < -1.5:
         value[1] = value[1]/2   
     while value[0] > 1.9:
         value[0] = value[0]/2
     model = SVC(C = 10**(3*value[0]), gamma=10**(-3*value[1]), kernel=kernel[round(abs(value[2]*4))%3])
     scores = cross_val_score(model, x_train, y_train, cv = 4, n_jobs=-1)
-    #print(value)
+        #print(value)
     return scores.mean(), #Add a comma even if there is only one return value
 
-def score(value):
+ def score(value):
     model = SVC(C = 10**(3*value[0]), gamma=10**(-3*value[1]), kernel=kernel[round(abs(value[2]*4))%3])
     model.fit(x_train, y_train)
     return model.score(x_test, y_test)
 
-#calcul des performances
 def main():
+    random.seed(100000)
+    np.random.seed(100000)
+    datasets = [load_breast_cancer(), load_digits(), load_iris(), load_wine()]#, load_linnerud
+    names = ['load_breast_cancer', 'load_digits', 'load_iris', "load_wine"]# 'load_linnerud'
+    data_s = [None for i in range(len(datasets))]
+    target_s = [None for i in range(len(datasets))]
+    target_names = [None for i in range(len(datasets))]
+    feature_names = [None for i in range(len(datasets))]
+    description  = [None for i in range(len(datasets))]
+    for i, dataset in enumerate(datasets):
+        data_s[i] = dataset.data
+        target_s[i] = dataset.target
+        pocket = list(zip(data_s[i], target_s[i]))
+       # print(pocket)
+        shuffle(pocket)
+        data_s[i] = [x[0] for x in pocket]
+        target_s[i] = [x[1] for x in pocket]
+        feature_names[i] = dataset.feature_names
+        description[i] = dataset.DESCR
+        target_names[i] = dataset.target_names
+
+
+    #svc
+    n_iter = 0
+    func_seq = [lambda:random.gauss(0,0.5) , lambda:random.gauss(0,0.5), lambda:random.random()]
+
+    x_train, x_test, y_train, y_test = [0]*4
+
+    kernel = ["linear", "rbf", "poly","sigmoid"]
+
+    creator.create("FitnessMax", base.Fitness, weights=(1.0,)) #Add a comma even if there is only one argument
+    creator.create("Individual", list, fitness=creator.FitnessMax)
+    toolbox = base.Toolbox()
+    # Attribute generator
+    # Structure initializers
+    toolbox.register("individual", tools.initCycle, creator.Individual, 
+        func_seq, n=1)
+    toolbox.register("population", tools.initRepeat, list, toolbox.individual)                       
+
+    toolbox.register("mate", tools.cxTwoPoint)
+    toolbox.register("mutate", tools.mutGaussian,mu = 0,sigma = 0.5, indpb=0.2)
+    toolbox.register("select", tools.selBest)
+    toolbox.register("map", futures.map)
+    #pool = multiprocessing.Pool()
+    #toolbox.register("map", pool.map)
+
+   
+
+#calcul des performances
+
     for total in [1, 5, 10, 25, 50, 100, 125, 150, 175, 200, 250]:
         ea_results = {}
         cma_results = {}
 
         for i in range(len(datasets)):
-            n_iter = 0
+            #n_iter = 0
             x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
             x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
             toolbox.register("evaluate", evalOneMax)
