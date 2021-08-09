@@ -85,7 +85,7 @@ for total in x_axis:
     turn = 10
 
     for i, (name, data) in enumerate(zip(names, datasets)):
-        model =  SGDClassifier(n_jobs=-1, eta0 = 0.0001, max_iter = 2000)
+        model =  SGDClassifier(n_jobs=-1, eta0 = 0.0001, max_iter = 5000)
         #automl = autosklearn.classification.AutoSklearnClassifier(time_left_for_this_task=30)
         # preprocessing 
         if(not(target_names[i] is None)):
