@@ -95,7 +95,7 @@ for total in x_axis:
             x_train, x_test = pre_process.fit_transform(x_train), pre_process.fit_transform(x_test)
             #creation des grilles de recherches structurées et aleatoires 
             #grid_t = GridSearchCV(model, param_grid=param_Grid, cv=4, n_jobs=-1, verbose=4)
-            rand_t = RandomizedSearchCV(model, param_distributions= param_Grid, n_iter=n_itersearch, cv=3, n_jobs=-1, verbose = 2)
+            rand_t = RandomizedSearchCV(model, param_distributions= param_Grid, n_iter=n_itersearch, cv=3, n_jobs=-1)
             #tests[names[i]] = [x_train, x_test, y_train, y_test]
 
             train_liste = [0 for _ in range(turn)]
