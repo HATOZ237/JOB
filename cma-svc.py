@@ -85,9 +85,9 @@ def main():
     toolbox.register("mate", tools.cxTwoPoint)
     toolbox.register("mutate", tools.mutGaussian,mu = 0,sigma = 0.5, indpb=0.2)
     toolbox.register("select", tools.selBest)
-    toolbox.register("map", futures.map)
-    #pool = multiprocessing.Pool()
-    #toolbox.register("map", pool.map)
+    #toolbox.register("map", futures.map)
+    pool = multiprocessing.Pool()
+    toolbox.register("map", pool.map)
 
    
 
