@@ -49,8 +49,8 @@ for i, dataset in enumerate(datasets):
 
 
 #param_Grid = {"max_features":np.linspace(0.001,0.999, num=10), "max_samples":np.linspace(0.001,0.999, num=10), "n_estimators":np.arange(1, 100, 10)}
-#param_Grid = {"n_neighbors":np.arange(1,40, 1), "p":np.arange(1,5), "leaf_size":np.arange(1, 31, 1)}
-param_Grid = {"learning_rate":["optimal", 'invscaling', "adaptive", 'constant'], "l1_ratio":np.linspace(0,1, num = 11), "alpha":np.logspace(-4,-1,num = 40), "loss":["hinge", 'log', 'perceptron', "modified_huber","squared_hinge"]}
+param_Grid = {"n_neighbors":np.arange(1,40, 1), "p":np.arange(1,5), "leaf_size":np.arange(1, 31, 1)}
+#param_Grid = {"learning_rate":["optimal", 'invscaling', "adaptive", 'constant'], "l1_ratio":np.linspace(0,1, num = 11), "alpha":np.logspace(-4,-1,num = 40), "loss":["hinge", 'log', 'perceptron', "modified_huber","squared_hinge"]}
 #param_Grid = {"C":np.logspace(-3.5, 4, num=25), "gamma":np.logspace(-5, 2.5, num = 25), "kernel":["rbf", "poly", "sigmoid", "linear"]}
 #random_Grid = {"C":loguniform(1e-1, 1e3), "gamma":loguniform(1e-5, 1e0), "kernel":["rbf", "poly", "sigmoid", 'linear']}
 
@@ -82,10 +82,10 @@ for total in x_axis:
     trainrate = 0.75
     num = 10
     tests = {}
-    turn = 15
+    turn = 10
 
     for i, (name, data) in enumerate(zip(names, datasets)):
-        model =  SGDClassifier(n_jobs=-1, eta0=0.00001)
+        model =  KNeighborsClassifier(n_jobs = -1)
         #automl = autosklearn.classification.AutoSklearnClassifier(time_left_for_this_task=30)
         # preprocessing 
         if(not(target_names[i] is None)):
@@ -148,4 +148,4 @@ for total in x_axis:
 
 
             print(f"J'ai fini le traitement du dataset {names[i]}")
-    pd.DataFrame(results_rand).to_csv(f"RANDSEARCH-SGD-{str(total)}")
+    pd.DataFrame(results_rand).to_csv(f"RANDSEARCH-KN-{str(total)}")
