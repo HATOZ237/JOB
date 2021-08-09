@@ -47,15 +47,7 @@ def score(value):
     return model.score(x_test, y_test)
 
 def main():
-    random.seed(100000)
-    np.random.seed(100000)
-    datasets = [load_breast_cancer(), load_digits(), load_iris(), load_wine()]#, load_linnerud
-    names = ['load_breast_cancer', 'load_digits', 'load_iris', "load_wine"]# 'load_linnerud'
-    data_s = [None for i in range(len(datasets))]
-    target_s = [None for i in range(len(datasets))]
-    target_names = [None for i in range(len(datasets))]
-    feature_names = [None for i in range(len(datasets))]
-    description  = [None for i in range(len(datasets))]
+    
     for i, dataset in enumerate(datasets):
         data_s[i] = dataset.data
         target_s[i] = dataset.target
@@ -73,7 +65,7 @@ def main():
     n_iter = 0
     func_seq = [lambda:random.gauss(0,0.5) , lambda:random.gauss(0,0.5), lambda:random.random()]
 
-    x_train, x_test, y_train, y_test = [0]*4
+    
 
     kernel = ["linear", "rbf", "poly","sigmoid"]
 
@@ -146,4 +138,14 @@ def main():
         pd.DataFrame(cma_results).to_csv(f"CMA-SVC-{str(total*10)}")
 
 if __name__ == "__main__":
+    random.seed(100000)
+    np.random.seed(100000)
+    datasets = [load_breast_cancer(), load_digits(), load_iris(), load_wine()]#, load_linnerud
+    names = ['load_breast_cancer', 'load_digits', 'load_iris', "load_wine"]# 'load_linnerud'
+    data_s = [None for i in range(len(datasets))]
+    target_s = [None for i in range(len(datasets))]
+    target_names = [None for i in range(len(datasets))]
+    feature_names = [None for i in range(len(datasets))]
+    description  = [None for i in range(len(datasets))]
+    x_train, x_test, y_train, y_test = [0]*4
     main()
