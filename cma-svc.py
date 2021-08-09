@@ -26,6 +26,8 @@ from deap import tools
 from statistics import *
 from deap import cma
 from scoop import futures
+from multiprocessing import Process
+import multiprocessing
 
 def evalOneMax(value):
     while value[1] < -1.5:
