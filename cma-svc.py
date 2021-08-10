@@ -143,5 +143,5 @@ def main():
         pd.DataFrame(cma_results).to_csv(f"CMA-SVC-{str(total*10)}")
 
         
- if __name__ == "__main__":
+if __name__ == "__main__":
     main()
