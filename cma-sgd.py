@@ -73,9 +73,6 @@ toolbox.register("select", tools.selBest)
 #toolbox.register("map", pool.map)
 
 def evalOneMax(value):
-    #print(value)
-    global n_iter 
-    n_iter = n_iter+1
     model = SGDClassifier(n_jobs=-1,eta0=0.00001, loss=loss[round(abs(value[0]*6))%4], learning_rate=learning_rate[round(abs(value[1]*5))%3], l1_ratio=abs(value[2]%1), alpha=10**(-3*value[3]))
     scores = cross_val_score(model, x_train, y_train, cv = 4, n_jobs=-1)
     return scores.mean(), #Add a comma even if there is only one return value
@@ -114,7 +111,7 @@ for total in [1, 5, 10, 25, 50, 100, 125, 150, 175, 200, 250]:
         best2 = 0
         best_score = 0
         for k in range(turn):
-            strategy = cma.Strategy(centroid=[0,0,0], sigma=0.5, lambda_ = 10)
+            strategy = cma.Strategy(centroid=[0]*4, sigma=0.5, lambda_ = 10)
             toolbox.register("generate", strategy.generate, creator.Individual)
             toolbox.register("update", strategy.update)
             #print("--------turn : "+ str(k+1)+"---------")
