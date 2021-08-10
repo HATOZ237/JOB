@@ -80,7 +80,7 @@ def evalOneMax(value):
     while value[0] > 1.9:
         value[0] = value[0]/2
     model = SVC(C = 10**(3*value[0]), gamma=10**(-3*value[1]), kernel=kernel[round(abs(value[2]*4))%3])
-    scores = cross_val_score(model, x_train, y_train, cv = 4, n_jobs=-1)
+    scores = cross_val_score(model, x_train, y_train, cv = 4, n_jobs=1)
     #print(value)
     return scores.mean(), #Add a comma even if there is only one return value
 
