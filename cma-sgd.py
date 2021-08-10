@@ -76,12 +76,12 @@ def evalOneMax(value):
     #print(value)
     global n_iter 
     n_iter = n_iter+1
-    model = SGDClassifier(n_jobs=-1,eta0=0.00001, loss=loss[round(abs(value[0]*6))%5], learning_rate=learning_rate[round(abs(value[1]*5))%4], l1_ratio=abs(value[2]%1), alpha=10**(-3*value[3]))
+    model = SGDClassifier(n_jobs=-1,eta0=0.00001, loss=loss[round(abs(value[0]*6))%4], learning_rate=learning_rate[round(abs(value[1]*5))%3], l1_ratio=abs(value[2]%1), alpha=10**(-3*value[3]))
     scores = cross_val_score(model, x_train, y_train, cv = 4, n_jobs=-1)
     return scores.mean(), #Add a comma even if there is only one return value
 
 def score(value):
-    model = SGDClassifier(n_jobs=-1,eta0=0.00001, loss=loss[round(abs(value[0]*6))%5], learning_rate=learning_rate[round(abs(value[1]*5))%4], l1_ratio=abs(value[2]%1), alpha=10**(-3*value[3]))
+    model = SGDClassifier(n_jobs=-1,eta0=0.00001, loss=loss[round(abs(value[0]*6))%4], learning_rate=learning_rate[round(abs(value[1]*5))%3], l1_ratio=abs(value[2]%1), alpha=10**(-3*value[3]))
     model.fit(x_train, y_train)
     return model.score(x_test, y_test)
 
@@ -130,7 +130,7 @@ for total in [1, 5, 10, 25, 50, 100, 125, 150, 175, 200, 250]:
                 best_score = score_tmp
             train_liste[k] = best_score
             test_liste[k] = score(best2) 
-        cma_results[names[i]] = {'loss':loss[round(abs(best2[0]*6))%5], "learning_rate":learning_rate[round(best2[1]%3)], 'l1_ratio':abs(best2[2]%1),"alpha":10**(-3*best2[3]), 'test_score': np.mean(test_liste),'std_test': np.std(test_liste),
+        cma_results[names[i]] = {'loss':loss[round(abs(best2[0]*6))%4], "learning_rate":learning_rate[round(best2[1]%3)], 'l1_ratio':abs(best2[2]%1),"alpha":10**(-3*best2[3]), 'test_score': np.mean(test_liste),'std_test': np.std(test_liste),
                                  "train_score": np.mean(train_liste), "std_train":np.std(train_liste),"Time":np.mean(time_liste)}
     pd.DataFrame(cma_results).to_csv(f"CMA-SGD-{str(total*10)}")
     print("\n")
