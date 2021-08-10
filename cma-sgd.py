@@ -78,6 +78,13 @@ def evalOneMax(value):
     scores = cross_val_score(model, x_train, y_train, cv = 3, n_jobs=1)
     return scores.mean(), #Add a comma even if there is only one return value
 
+def evalOne(value):
+    loss = ['hinge', 'log', 'perceptron', 'modified_huber', "squared_hinge"]
+    learning_rate = ["constant", 'optimal', 'adaptive', 'invscaling']
+    model = SGDClassifier(n_jobs=1,eta0=0.00001, loss=loss[round(abs(value[0]*6))%4], learning_rate=learning_rate[round(abs(value[1]*5))%3], l1_ratio=abs(value[2]%1), alpha=10**(-3*value[3]))
+    scores = cross_val_score(model, x_train, y_train, cv = 3, n_jobs=1)
+    return scores.mean(), #Add a comma even if there is only one return value
+
 def score(value):
     loss = ['hinge', 'log', 'perceptron', 'modified_huber', "squared_hinge"]
     learning_rate = ["constant", 'optimal', 'adaptive', 'invscaling']
@@ -127,8 +134,8 @@ def main():
                 #print(len(pops[0]))
                 time_liste[k] = time()-start
                 pops = pops[0]
-                best = pops[np.argmax([toolbox.evaluate(x) for x in pops])]
-                score_tmp = evalOneMax(best)[0]
+                best = pops[np.argmax([evalOne(x) for x in pops])]
+                score_tmp = evalOne(best)[0]
                 if best_score < score_tmp:
                     best2 = best
                     best_score = score_tmp
