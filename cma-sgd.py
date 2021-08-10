@@ -130,7 +130,7 @@ def main():
                 toolbox.register("update", strategy.update)
                 #print("--------turn : "+ str(k+1)+"---------")
                 start = time()
-                pops = algorithms.eaGenerateUpdate(toolbox, ngen=NGEN, stats=stats, halloffame=hof2, verbose = False)
+                pops = algorithms.eaGenerateUpdate(toolbox, ngen=NGEN, stats=stats, halloffame=hof2, verbose = True)
                 #print(len(pops[0]))
                 time_liste[k] = time()-start
                 pops = pops[0]
