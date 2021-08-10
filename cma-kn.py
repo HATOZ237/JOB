@@ -72,12 +72,13 @@ toolbox.register("select", tools.selBest)
 
 
 def evalOneMax(value):
-    model = KNeighborsClassifier(n_neighbors=round(abs(value[0])*20)+1, p=round(abs(value[1])*5)+1, leaf_size=round(abs(value[2]*15))+1, algorithm="auto", weights="uniform", n_jobs=1)
-    scores = cross_val_score(model, x_train, y_train, cv = 3, n_jobs=1)
+    #print("ICI")
+    model = KNeighborsClassifier(n_neighbors=round(abs(value[0])*20)+1, p=round(abs(value[1])*5)+1, leaf_size=round(abs(value[2]*15))+1, algorithm="auto", weights="uniform", n_jobs=-1)
+    scores = cross_val_score(model, x_train, y_train, cv = 3, n_jobs=-1)
     return scores.mean(), #Add a comma even if there is only one return value
 
 def score(value):
-    model = KNeighborsClassifier(n_neighbors=round(abs(value[0])*20)+1, p=round(abs(value[1])*5)+1, leaf_size=round(abs(value[2])*15)+1, algorithm="auto", weights="uniform", n_jobs=1)
+    model = KNeighborsClassifier(n_neighbors=round(abs(value[0])*20)+1, p=round(abs(value[1])*5)+1, leaf_size=round(abs(value[2])*15)+1, algorithm="auto", weights="uniform", n_jobs=-1)
     model.fit(x_train, y_train)
     return model.score(x_test, y_test)
 
@@ -93,8 +94,8 @@ def main():
             x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
             x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
             toolbox.register("evaluate", evalOneMax)
-            pool = multiprocessing.Pool()
-            toolbox.register("map", pool.map)
+            #pool = multiprocessing.Pool()
+            #toolbox.register("map", pool.map)
             #pop = toolbox.population(n=10*N)
             #print(pop)
             hof1 = tools.HallOfFame(50)
@@ -117,7 +118,7 @@ def main():
                 strategy = cma.Strategy(centroid=[0,0,0], sigma=0.5, lambda_ = 10)
                 toolbox.register("generate", strategy.generate, creator.Individual)
                 toolbox.register("update", strategy.update)
-                #print("--------turn : "+ str(k+1)+"---------")
+                print("--------turn : "+ str(k+1)+"---------")
                 start = time()
                 pops = algorithms.eaGenerateUpdate(toolbox, ngen=NGEN, stats=stats, halloffame=hof2, verbose = False)
                 #print(len(pops[0]))
@@ -132,7 +133,7 @@ def main():
                 test_liste[k] = score(best2) 
             cma_results[names[i]] = {'n_neighbors':round(abs(best2[0])*30)+1, "p":round(abs(best2[1])*5)+1, 'leaf_size':round(abs(best2[2])*15)+1, 'test_score': np.mean(test_liste),'std_test': np.std(test_liste),
                                      "train_score": np.mean(train_liste), "std_train":np.std(train_liste),"Time":np.mean(time_liste)}
-        pd.DataFrame(cma_results).to_csv(f"CMA-SVC-{str(total*10)}")
+        pd.DataFrame(cma_results).to_csv(f"CMA-KN-{str(total*10)}")
 
         
 if __name__ == "__main__":
