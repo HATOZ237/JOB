@@ -90,52 +90,58 @@ def score(value):
     return model.score(x_test, y_test)
 
 #calcul des performances
-pool = multiprocessing.Pool()
-toolbox.register("map", pool.map)
-for total in [1, 5, 10, 25, 50, 100, 125, 150, 175, 200, 250]:
-    ea_results = {}
-    cma_results = {}
-    
-    for i in range(len(datasets)):
-        n_iter = 0
-        x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
-        x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
-        toolbox.register("evaluate", evalOneMax)
-        #pop = toolbox.population(n=10*N)
-        #print(pop)
-        hof1 = tools.HallOfFame(50)
-        hof2 = tools.HallOfFame(50)
-        stats = tools.Statistics(lambda ind: ind.fitness.values)
-        stats.register("avg", np.mean)
-        stats.register("std", np.std)
-        #stats.register("min", np.min)
-        #stats.register("max", np.max)
+def main():
+    for total in [75]:
+        ea_results = {}
+        cma_results = {}
 
-        CXPB, MUTPB, NGEN, turn = 0.3, 0.2, total, 10
-        start = time()
-        train_liste = [0 for _ in range(turn)]
-        test_liste = [0 for _ in range(turn)]
-        time_liste = [0 for _ in range(turn)]
-        print("------------------- Data : "+names[i]+" ------------------------") 
-        best2 = 0
-        best_score = 0
-        for k in range(turn):
-            strategy = cma.Strategy(centroid=[0,0,0], sigma=0.5, lambda_ = 10)
-            toolbox.register("generate", strategy.generate, creator.Individual)
-            toolbox.register("update", strategy.update)
-            #print("--------turn : "+ str(k+1)+"---------")
+        for i in range(len(datasets)):
+            n_iter = 0
+            global x_train, x_test, y_train, y_test
+            x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
+            x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
+            toolbox.register("evaluate", evalOneMax)
+            pool = multiprocessing.Pool()
+            toolbox.register("map", pool.map)
+            #pop = toolbox.population(n=10*N)
+            #print(pop)
+            hof1 = tools.HallOfFame(50)
+            hof2 = tools.HallOfFame(50)
+            stats = tools.Statistics(lambda ind: ind.fitness.values)
+            stats.register("avg", np.mean)
+            stats.register("std", np.std)
+            #stats.register("min", np.min)
+            #stats.register("max", np.max)
+
+            CXPB, MUTPB, NGEN, turn = 0.3, 0.2, total, 10
             start = time()
-            pops = algorithms.eaGenerateUpdate(toolbox, ngen=NGEN, stats=stats, halloffame=hof2, verbose = False)
-            #print(len(pops[0]))
-            time_liste[k] = time()-start
-            pops = pops[0]
-            best = pops[np.argmax([toolbox.evaluate(x) for x in pops])]
-            score_tmp = evalOneMax(best)[0]
-            if best_score < score_tmp:
-                best2 = best
-                best_score = score_tmp
-            train_liste[k] = best_score
-            test_liste[k] = score(best2) 
-        cma_results[names[i]] = {"kernel":kernel[round(best2[2]%3)], "C":10**(3*best2[0]), 'gamma':10**(-3*best2[1]), 'test_score': np.mean(test_liste),'std_test': np.std(test_liste),
-                                 "train_score": np.mean(train_liste), "std_train":np.std(train_liste),"Time":np.mean(time_liste)}
-    pd.DataFrame(cma_results).to_csv(f"CMA-SVC-{str(total*10)}")
+            train_liste = [0 for _ in range(turn)]
+            test_liste = [0 for _ in range(turn)]
+            time_liste = [0 for _ in range(turn)]
+            print("------------------- Data : "+names[i]+" ------------------------") 
+            best2 = 0
+            best_score = 0
+            for k in range(turn):
+                strategy = cma.Strategy(centroid=[0,0,0], sigma=0.5, lambda_ = 10)
+                toolbox.register("generate", strategy.generate, creator.Individual)
+                toolbox.register("update", strategy.update)
+                #print("--------turn : "+ str(k+1)+"---------")
+                start = time()
+                pops = algorithms.eaGenerateUpdate(toolbox, ngen=NGEN, stats=stats, halloffame=hof2, verbose = False)
+                #print(len(pops[0]))
+                time_liste[k] = time()-start
+                pops = pops[0]
+                best = pops[np.argmax([toolbox.evaluate(x) for x in pops])]
+                score_tmp = evalOneMax(best)[0]
+                if best_score < score_tmp:
+                    best2 = best
+                    best_score = score_tmp
+                train_liste[k] = best_score
+                test_liste[k] = score(best2) 
+            cma_results[names[i]] = {"kernel":kernel[round(best2[2]%3)], "C":10**(3*best2[0]), 'gamma':10**(-3*best2[1]), 'test_score': np.mean(test_liste),'std_test': np.std(test_liste),
+                                     "train_score": np.mean(train_liste), "std_train":np.std(train_liste),"Time":np.mean(time_liste)}
+        pd.DataFrame(cma_results).to_csv(f"CMA-SVC-{str(total*10)}")
+
+        
+ if __name__ == "__main__":
+    main()
