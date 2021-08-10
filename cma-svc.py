@@ -72,8 +72,6 @@ toolbox.register("select", tools.selBest)
 
 
 def evalOneMax(value):
-    global n_iter 
-    n_iter = n_iter+1
     #lock = value[1]
     while value[1] < -1.5:
         value[1] = value[1]/2   
