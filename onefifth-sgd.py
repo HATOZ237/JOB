@@ -28,6 +28,28 @@ from deap import cma
 import multiprocessing
 from multiprocessing import Process
 
+
+random.seed(100000)
+np.random.seed(100000)
+datasets = [load_breast_cancer(), load_digits(), load_iris(), load_wine()]#, load_linnerud
+names = ['load_breast_cancer', 'load_digits', 'load_iris', "load_wine"]# 'load_linnerud'
+data_s = [None for i in range(len(datasets))]
+target_s = [None for i in range(len(datasets))]
+target_names = [None for i in range(len(datasets))]
+feature_names = [None for i in range(len(datasets))]
+description  = [None for i in range(len(datasets))]
+for i, dataset in enumerate(datasets):
+    data_s[i] = dataset.data
+    target_s[i] = dataset.target
+    pocket = list(zip(data_s[i], target_s[i]))
+   # print(pocket)
+    shuffle(pocket)
+    data_s[i] = [x[0] for x in pocket]
+    target_s[i] = [x[1] for x in pocket]
+    feature_names[i] = dataset.feature_names
+    description[i] = dataset.DESCR
+    target_names[i] = dataset.target_names
+    
 def evalOneMax(value):
     #print(value)
     model = SGDClassifier(n_jobs=-1,eta0=0.0001, loss=loss[round(abs(value[0]*6))%5], learning_rate=learning_rate[round(abs(value[1]*5))%4], l1_ratio=abs(value[2]%1), alpha=10**(-3*value[3]))
@@ -56,9 +78,10 @@ n_iter = 0
 func = [random.random(), random.random(), random.random(), random.gauss(0, 0.5)]
 loss = ['hinge', 'log', 'perceptron', 'modified_huber', "squared_hinge"]
 learning_rate = ["constant", 'optimal', 'adaptive', 'invscaling']
-def main():
+
+def main(ngen):
     start = time()
-    random.seed(64)
+    #random.seed(64)
     
     logbook = tools.Logbook()
     logbook.header = "gen", "fitness", 'loss', 'alpha', 'l1_ratio',"learning_rate", "score"
@@ -73,7 +96,7 @@ def main():
     worst = creator.Individual(func)
     #print(worst)
 
-    NGEN = 10
+    NGEN = ngen
     for g in range(NGEN):
         toolbox.update(worst, best, sigma) 
         worst.fitness.values = toolbox.evaluate(worst)
@@ -81,17 +104,19 @@ def main():
             sigma = sigma * alpha
             best, worst = worst, best
         else:
-            sigma = sigma * alpha**(-0.25)
-            
-        logbook.record(gen=g, fitness=best.fitness.values[0], loss=loss[round(abs(best[0]*6))%5], learning_rate=learning_rate[round(abs(best[1]*5))%4], l1_ratio=abs(best[2]%1), alpha=10**(-3*best[3]), score=score(best))
-        print(logbook.stream)
-    print("Fin de l'algorithme en "+ str(n_iter)+" tours")
+            sigma = sigma * alpha**(-0.25) 
+        #logbook.record(gen=g, fitness=best.fitness.values[0], loss=loss[round(abs(best[0]*6))%5], learning_rate=learning_rate[round(abs(best[1]*5))%4], l1_ratio=abs(best[2]%1), alpha=10**(-3*best[3]), score=score(best))
+        #print(logbook.stream)
+    #print("Fin de l'algorithme en "+ str(n_iter)+" tours")
     start = time()-start
     return best, start
     
 if __name__ == "__main__":
     one_results = {}
     for i in range(len(datasets)):
+        train_liste = []
+        test_liste = []
+        time_liste = []
         n_iter = 0
         x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
         x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
