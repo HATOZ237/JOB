@@ -91,7 +91,7 @@ def score(value):
 
 #calcul des performances
 def main():
-    for total in [75]:
+    for total in [1, 5, 10, 25, 50, 100, 125, 150, 175, 200, 250]:
         ea_results = {}
         cma_results = {}
 
@@ -127,7 +127,7 @@ def main():
                 toolbox.register("update", strategy.update)
                 #print("--------turn : "+ str(k+1)+"---------")
                 start = time()
-                pops = algorithms.eaGenerateUpdate(toolbox, ngen=NGEN, stats=stats, halloffame=hof2, verbose = False)
+                pops = algorithms.eaGenerateUpdate(toolbox, ngen=NGEN, stats=stats, halloffame=hof2, verbose = True)
                 #print(len(pops[0]))
                 time_liste[k] = time()-start
                 pops = pops[0]
