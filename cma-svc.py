@@ -30,6 +30,23 @@ from multiprocessing import Process
 import multiprocessing
 
 
+def evalOneMax(value, data):
+    kernel = ["linear", "rbf", "poly","sigmoid"]
+    while value[1] < -1.5:
+        value[1] = value[1]/2   
+    while value[0] > 1.9:
+        value[0] = value[0]/2
+    model = SVC(C = 10**(3*value[0]), gamma=10**(-3*value[1]), kernel=kernel[round(abs(value[2]*4))%3])
+    scores = cross_val_score(model, data[0], data[1], cv = 3, n_jobs=-1)
+            #print(value)
+    return scores.mean(), #Add a comma even if there is only one return value
+    
+def score(value, data):
+    kernel = ["linear", "rbf", "poly","sigmoid"]
+    model = SVC(C = 10**(3*value[0]), gamma=10**(-3*value[1]), kernel=kernel[round(abs(value[2]*4))%3])
+    model.fit(data[0], data[1])
+    return model.score(data[0], data[1])
+
 
 def main():
     random.seed(100000)
@@ -64,22 +81,7 @@ def main():
 
     kernel = ["linear", "rbf", "poly","sigmoid"]
     
-    def evalOneMax(value):
-        kernel = ["linear", "rbf", "poly","sigmoid"]
-        while value[1] < -1.5:
-            value[1] = value[1]/2   
-        while value[0] > 1.9:
-            value[0] = value[0]/2
-        model = SVC(C = 10**(3*value[0]), gamma=10**(-3*value[1]), kernel=kernel[round(abs(value[2]*4))%3])
-        scores = cross_val_score(model, x_train, y_train, cv = 3, n_jobs=-1)
-            #print(value)
-        return scores.mean(), #Add a comma even if there is only one return value
-
-    def score(value):
-        kernel = ["linear", "rbf", "poly","sigmoid"]
-        model = SVC(C = 10**(3*value[0]), gamma=10**(-3*value[1]), kernel=kernel[round(abs(value[2]*4))%3])
-        model.fit(x_train, y_train)
-        return model.score(x_test, y_test)
+   
 
     creator.create("FitnessMax", base.Fitness, weights=(1.0,)) #Add a comma even if there is only one argument
     creator.create("Individual", list, fitness=creator.FitnessMax)
@@ -109,7 +111,9 @@ def main():
             #n_iter = 0
             x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
             x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
-            toolbox.register("evaluate", evalOneMax)
+            d_train = x_train, y_train
+            d_test = x_test, y_test
+            toolbox.register("evaluate", evalOneMax, d_train)
             #pop = toolbox.population(n=10*N)
             #print(pop)
             hof1 = tools.HallOfFame(50)
@@ -134,17 +138,17 @@ def main():
                 toolbox.register("update", strategy.update)
                 #print("--------turn : "+ str(k+1)+"---------")
                 start = time()
-                pops = algorithms.eaGenerateUpdate(toolbox, ngen=NGEN, stats=stats, halloffame=hof2, verbose = False)
+                pops = algorithms.eaGenerateUpdate(toolbox, ngen=NGEN, stats=stats, halloffame=hof2, verbose =True )
                 #print(len(pops[0]))
                 time_liste[k] = time()-start
                 pops = pops[0]
-                best = pops[np.argmax([toolbox.evaluate(x) for x in pops])]
+                best = pops[np.argmax([toolbox.evaluate(x, d_train) for x in pops])]
                 score_tmp = evalOneMax(best)[0]
                 if best_score < score_tmp:
                     best2 = best
                     best_score = score_tmp
                 train_liste[k] = best_score
-                test_liste[k] = score(best2) 
+                test_liste[k] = score(best2, d_test) 
             cma_results[names[i]] = {"kernel":kernel[round(best2[2]%3)], "C":10**(3*best2[0]), 'gamma':10**(-3*best2[1]), 'test_score': np.mean(test_liste),'std_test': np.std(test_liste),
                                      "train_score": np.mean(train_liste), "std_train":np.std(train_liste),"Time":np.mean(time_liste)}
         pd.DataFrame(cma_results).to_csv(f"CMA-SVC-{str(total*10)}")
