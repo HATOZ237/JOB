@@ -117,7 +117,7 @@ def main():
                 strategy = cma.Strategy(centroid=[0,0,0], sigma=0.5, lambda_ = 10)
                 toolbox.register("generate", strategy.generate, creator.Individual)
                 toolbox.register("update", strategy.update)
-                #print("--------turn : "+ str(k+1)+"---------")
+                print("--------turn : "+ str(k+1)+"---------")
                 start = time()
                 pops = algorithms.eaGenerateUpdate(toolbox, ngen=NGEN, stats=stats, halloffame=hof2, verbose = False)
                 #print(len(pops[0]))
