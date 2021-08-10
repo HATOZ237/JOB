@@ -112,11 +112,14 @@ def main(ngen):
     return best, start
     
 if __name__ == "__main__":
+    turn  = 10
     one_results = {}
     for i in range(len(datasets)):
-        train_liste = []
-        test_liste = []
-        time_liste = []
+        for total in [10, 50, 75, 100, 250, 500, 750, 1000,  1250, 1500, 1750, 2000, 2500]:
+            
+        train_liste = [0 for _ i range(turn)]
+        test_liste = [0 for _ i range(turn)]
+        time_liste = [0 for _ i range(turn)]
         n_iter = 0
         x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
         x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
