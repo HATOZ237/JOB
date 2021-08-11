@@ -27,6 +27,7 @@ from statistics import *
 from deap import cma
 from multiprocessing import Process
 import multiprocessing
+from scoop import futures
 
 random.seed(100000)
 np.random.seed(100000)
@@ -74,8 +75,8 @@ toolbox.register("select", tools.selBest)
 def evalOneMax(value):
     loss = ['hinge', 'log', 'perceptron', 'modified_huber', "squared_hinge"]
     learning_rate = ["constant", 'optimal', 'adaptive', 'invscaling']
-    model = SGDClassifier(n_jobs=1,eta0=0.00001, loss=loss[round(abs(value[0]*6))%4], learning_rate=learning_rate[round(abs(value[1]*5))%3], l1_ratio=abs(value[2]%1), alpha=10**(-3*value[3]))
-    scores = cross_val_score(model, x_train, y_train, cv = 3, n_jobs=1)
+    model = SGDClassifier(n_jobs=-1,eta0=0.00001, loss=loss[round(abs(value[0]*6))%4], learning_rate=learning_rate[round(abs(value[1]*5))%3], l1_ratio=abs(value[2]%1), alpha=10**(-3*value[3]))
+    scores = cross_val_score(model, x_train, y_train, cv = 3, n_jobs=-1)
     return scores.mean(), #Add a comma even if there is only one return value
 
 def evalOne(value):
@@ -104,8 +105,9 @@ def main():
             x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
             x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
             toolbox.register("evaluate", evalOneMax)
-            pool = multiprocessing.Pool()
-            toolbox.register("map", pool.map)
+            #pool = multiprocessing.Pool()
+            #toolbox.register("map", pool.map)
+            toolbox.register("map", futures.map)
             #pop = toolbox.population(n=10*N)
             #print(pop)
             hof1 = tools.HallOfFame(50)
