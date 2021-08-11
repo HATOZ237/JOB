@@ -94,7 +94,7 @@ def main():
             x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
             x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
             toolbox.register("evaluate", evalOneMax)
-            #pool = multiprocessing.Pool()
+            pool = multiprocessing.Pool()
             toolbox.register("map", pool.map)
             pop = toolbox.population(n=10*N)
             #print(pop)
