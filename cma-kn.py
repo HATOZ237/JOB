@@ -84,7 +84,7 @@ def score(value):
 
 #calcul des performances
 def main():
-    for total in [ 175]:
+    for total in [ 200]:
         ea_results = {}
         cma_results = {}
 
@@ -95,8 +95,8 @@ def main():
             x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
             toolbox.register("evaluate", evalOneMax)
             #pool = multiprocessing.Pool()
-            #toolbox.register("map", pool.map)
-            #pop = toolbox.population(n=10*N)
+            toolbox.register("map", pool.map)
+            pop = toolbox.population(n=10*N)
             #print(pop)
             hof1 = tools.HallOfFame(50)
             hof2 = tools.HallOfFame(50)
