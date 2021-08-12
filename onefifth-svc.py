@@ -104,7 +104,7 @@ def main(ngen, id):
     #print("Fin de l'algorithme en "+ str(n_iter)+" tours")
     start = time()-start
     global train_liste, test_liste, time_liste
-    train_liste[id] = evalOneMax(best)
+    train_liste[id] = evalOneMax(best)[0]
     test_liste[id] = score(best)
     time_liste[id]
     return best, start
