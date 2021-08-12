@@ -1,6 +1,6 @@
 import sklearn
 from random import *
-from matplotlib import  pyplot as plt
+#from matplotlib import  pyplot as plt
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.svm import SVR, SVC, LinearSVC
