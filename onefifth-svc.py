@@ -65,12 +65,13 @@ toolbox = base.Toolbox()
 toolbox.register("update", update)
 toolbox.register("evaluate", evalOneMax)
 
-IND_SIZE = 10
+#IND_SIZE = 10
 
-func_seq = [lambda:random.gauss(0,0.5) , lambda:random.gauss(0,0.5), lambda:random.random()]
+
 
 
 def main(ngen, id):
+    IND_SIZE = 10
     start = time()
     #random.seed(64)
     
@@ -78,6 +79,7 @@ def main(ngen, id):
     #logbook.header = "gen", "fitness", 'loss', 'alpha', 'l1_ratio',"learning_rate", "score"
 
     #interval = (-3,7)
+    func_seq = [lambda:random.gauss(0,0.5) , lambda:random.gauss(0,0.5), lambda:random.random()]
     mu = func
     sigma = 0.5
     alpha = 2.0**(1.0/IND_SIZE)
