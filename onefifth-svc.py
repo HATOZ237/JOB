@@ -102,7 +102,7 @@ def main(ngen, id):
         #logbook.record(gen=g, fitness=best.fitness.values[0], loss=loss[round(abs(best[0]*6))%5], learning_rate=learning_rate[round(abs(best[1]*5))%4], l1_ratio=abs(best[2]%1), alpha=10**(-3*best[3]), score=score(best))
         #print(logbook.stream)
     #print("Fin de l'algorithme en "+ str(n_iter)+" tours")
-    start = time()-start
+    #start = time()-start
     global train_liste, test_liste, time_liste
     train_liste[id] = evalOneMax(best)[0]
     test_liste[id] = score(best)
