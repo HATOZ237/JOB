@@ -1,0 +1,6 @@
+,load_wine
+Time,0.0
+std_test,0.02277100170213244
+std_train,0.02277100170213244
+test_score,0.9
+train_score,0.9745622895622897
