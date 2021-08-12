@@ -52,6 +52,10 @@ def score(value):
     model = SVC(C = 10**(3*value[0]), gamma=10**(-3*value[1]), kernel=kernel[round(abs(value[2]*4))%3])
     model.fit(x_train, y_train)
     return model.score(x_test, y_test)
+
+def update(ind, mu, std):
+    for i, mu_i in enumerate(mu):
+        ind[i] = random.gauss(mu_i,std)
  
 
 creator.create("FitnessMin", base.Fitness, weights=(1.0,))
