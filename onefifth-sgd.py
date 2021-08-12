@@ -123,7 +123,7 @@ if __name__ == "__main__":
     train_liste = multiprocessing.Array('d', turn)
     test_liste = multiprocessing.Array('d', turn)
     time_liste = multiprocessing.Array('d', turn)
-    process = [0 for _ i range(turn)]
+    process = [0 for _ in range(turn)]
     for i in range(len(datasets)):
         x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
         x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
