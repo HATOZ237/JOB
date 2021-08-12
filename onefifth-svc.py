@@ -73,7 +73,7 @@ toolbox.register("evaluate", evalOneMax)
 
 def main(ngen, id):
     IND_SIZE = 10
-    start = time()
+    
     #random.seed(64)
     
     #logbook = tools.Logbook()
@@ -106,7 +106,7 @@ def main(ngen, id):
     global train_liste, test_liste, time_liste
     train_liste[id] = evalOneMax(best)[0]
     test_liste[id] = score(best)
-    time_liste[id] = time() - start
+    #time_liste[id] = time() - start
     #return best, start
     
 if __name__ == "__main__":
@@ -135,20 +135,22 @@ if __name__ == "__main__":
     one_results = {}
     train_liste = multiprocessing.Array('d', turn)
     test_liste = multiprocessing.Array('d', turn)
-    time_liste = multiprocessing.Array('d', turn)
+    start = 0
     process = [0 for _ in range(turn)]
-    for total in [10, 50, 100, 250, 500, 750, 1000,  1250, 1500, 1750, 2000, 2500]:
+    for total in [10, 50, 100]#, 250, 500, 750, 1000,  1250, 1500, 1750, 2000, 2500]:
         print(f"{total} essais demarré")
         for i in range(len(datasets)):
             x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
             x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
             for x in range(turn):
                 process[x] = Process(target = main, args = (total,x))
+            start = time()
             for x in range(turn):
                 process[x].start()
             for x in range(turn):
                 process[x].join()
+            start = time() - start
         
-            one_results[names[i]] = {"test_score": np.mean(test_liste), "std_test":np.std(test_liste),"train_score":np.mean(train_liste) ,'std_train':np.std(test_liste) , "Time":np.mean(time_liste)}
+            one_results[names[i]] = {"test_score": np.mean(test_liste), "std_test":np.std(test_liste),"train_score":np.mean(train_liste) ,'std_train':np.std(test_liste) , "Time":start/turn}
         pd.DataFrame(one_results).to_csv(f"ONEFIFTH-SVC-{total}")
         print(f"{total} essais terminé")
