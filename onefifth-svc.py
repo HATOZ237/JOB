@@ -39,7 +39,7 @@ kernel = ["linear", "rbf", "poly","sigmoid"]
 
 def evalOneMax(value):
     #lock = value[1]
-    print(value)
+    #print(value)
     while value[1] < -1.5:
         value[1] = value[1]/2   
     while value[0] > 1.9:
@@ -80,7 +80,7 @@ def main(ngen, id):
     #logbook.header = "gen", "fitness", 'loss', 'alpha', 'l1_ratio',"learning_rate", "score"
 
     #interval = (-3,7)
-    func = [lambda:random.gauss(0,0.5) , lambda:random.gauss(0,0.5), lambda:random.random()]
+    func = [random.gauss(0,0.5) , random.gauss(0,0.5), random.random()]
     mu = func
     sigma = 0.5
     alpha = 2.0**(1.0/IND_SIZE)
