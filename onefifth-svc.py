@@ -31,20 +31,27 @@ from multiprocessing import Process
 
 
     
+
+
+
+
+kernel = ["linear", "rbf", "poly","sigmoid"]
+
 def evalOneMax(value):
+    #lock = value[1]
+    while value[1] < -1.5:
+        value[1] = value[1]/2   
+    while value[0] > 1.9:
+        value[0] = value[0]/2
+    model = SVC(C = 10**(3*value[0]), gamma=10**(-3*value[1]), kernel=kernel[round(abs(value[2]*4))%3])
+    scores = cross_val_score(model, x_train, y_train, cv = 3, n_jobs=1)
     #print(value)
-    model = SGDClassifier(n_jobs=-1,eta0=0.0001, loss=loss[round(abs(value[0]*6))%5], learning_rate=learning_rate[round(abs(value[1]*5))%4], l1_ratio=abs(value[2]%1), alpha=10**(-3*value[3]))
-    scores = cross_val_score(model, x_train, y_train, cv = 3, n_jobs=-1)
     return scores.mean(), #Add a comma even if there is only one return value
 
 def score(value):
-    model = SGDClassifier(n_jobs=-1,eta0=0.0001, loss=loss[round(abs(value[0]*6))%5], learning_rate=learning_rate[round(abs(value[1]*5))%4], l1_ratio=abs(value[2]%1), alpha=10**(-3*value[3]))
+    model = SVC(C = 10**(3*value[0]), gamma=10**(-3*value[1]), kernel=kernel[round(abs(value[2]*4))%3])
     model.fit(x_train, y_train)
     return model.score(x_test, y_test)
-
-def update(ind, mu, std):
-    for i, mu_i in enumerate(mu):
-        ind[i] = random.gauss(mu_i,std)
  
 
 creator.create("FitnessMin", base.Fitness, weights=(1.0,))
@@ -56,9 +63,8 @@ toolbox.register("evaluate", evalOneMax)
 
 IND_SIZE = 10
 
-func = [random.random(), random.random(), random.random(), random.gauss(0, 0.5)]
-loss = ['hinge', 'log', 'perceptron', 'modified_huber', "squared_hinge"]
-learning_rate = ["constant", 'optimal', 'adaptive', 'invscaling']
+func_seq = [lambda:random.gauss(0,0.5) , lambda:random.gauss(0,0.5), lambda:random.random()]
+
 
 def main(ngen, id):
     start = time()
@@ -124,10 +130,11 @@ if __name__ == "__main__":
     test_liste = multiprocessing.Array('d', turn)
     time_liste = multiprocessing.Array('d', turn)
     process = [0 for _ in range(turn)]
-    for i in range(len(datasets)):
-        x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
-        x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
-        for total in [10, 50, 100, 250, 500, 750, 1000,  1250, 1500, 1750, 2000, 2500]:
+    for total in [10, 50, 100, 250, 500, 750, 1000,  1250, 1500, 1750, 2000, 2500]:
+        print(f"{total} essais demarré")
+        for i in range(len(datasets)):
+            x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
+            x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
             for x in range(turn):
                 process[x] = Process(target = main, args = (total,x))
             for x in range(turn):
@@ -135,4 +142,6 @@ if __name__ == "__main__":
             for x in range(turn):
                 process[x].join()
         
-            one_results[names[i]] = {"test_score": np.mean(test_liste), "std_test":np.std(test_liste),"train_score":np.mean(train_liste) ,'std_train':np.std(test_liste) , "Time":np.mean(time_liste)}
+        one_results[names[i]] = {"test_score": np.mean(test_liste), "std_test":np.std(test_liste),"train_score":np.mean(train_liste) ,'std_train':np.std(test_liste) , "Time":np.mean(time_liste)}
+        pd.DataFrame(one_results).to_csv(f"ONEFIFTH-SVC-{total}")
+        print(f"{total} essais terminé")
