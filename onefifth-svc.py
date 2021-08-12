@@ -106,8 +106,8 @@ def main(ngen, id):
     global train_liste, test_liste, time_liste
     train_liste[id] = evalOneMax(best)[0]
     test_liste[id] = score(best)
-    time_liste[id]
-    return best, start
+    time_liste[id] = time() - start
+    #return best, start
     
 if __name__ == "__main__":
     random.seed(100000)
