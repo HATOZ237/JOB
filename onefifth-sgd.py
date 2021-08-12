@@ -29,26 +29,7 @@ import multiprocessing
 from multiprocessing import Process
 
 
-random.seed(100000)
-np.random.seed(100000)
-datasets = [load_breast_cancer(), load_digits(), load_iris(), load_wine()]#, load_linnerud
-names = ['load_breast_cancer', 'load_digits', 'load_iris', "load_wine"]# 'load_linnerud'
-data_s = [None for i in range(len(datasets))]
-target_s = [None for i in range(len(datasets))]
-target_names = [None for i in range(len(datasets))]
-feature_names = [None for i in range(len(datasets))]
-description  = [None for i in range(len(datasets))]
-for i, dataset in enumerate(datasets):
-    data_s[i] = dataset.data
-    target_s[i] = dataset.target
-    pocket = list(zip(data_s[i], target_s[i]))
-   # print(pocket)
-    shuffle(pocket)
-    data_s[i] = [x[0] for x in pocket]
-    target_s[i] = [x[1] for x in pocket]
-    feature_names[i] = dataset.feature_names
-    description[i] = dataset.DESCR
-    target_names[i] = dataset.target_names
+
     
 def evalOneMax(value):
     #print(value)
@@ -73,18 +54,18 @@ toolbox = base.Toolbox()
 toolbox.register("update", update)
 toolbox.register("evaluate", evalOneMax)
 
-IND_SIZE = 30
-n_iter = 0
+IND_SIZE = 10
+
 func = [random.random(), random.random(), random.random(), random.gauss(0, 0.5)]
 loss = ['hinge', 'log', 'perceptron', 'modified_huber', "squared_hinge"]
 learning_rate = ["constant", 'optimal', 'adaptive', 'invscaling']
 
-def main(ngen):
+def main(ngen, id):
     start = time()
     #random.seed(64)
     
-    logbook = tools.Logbook()
-    logbook.header = "gen", "fitness", 'loss', 'alpha', 'l1_ratio',"learning_rate", "score"
+    #logbook = tools.Logbook()
+    #logbook.header = "gen", "fitness", 'loss', 'alpha', 'l1_ratio',"learning_rate", "score"
 
     #interval = (-3,7)
     mu = func
@@ -109,19 +90,49 @@ def main(ngen):
         #print(logbook.stream)
     #print("Fin de l'algorithme en "+ str(n_iter)+" tours")
     start = time()-start
+    global train_liste, test_liste, time_liste
+    train_liste[id] = evalOneMax(best)
+    test_liste[id] = score(best)
+    time_liste[id]
     return best, start
     
 if __name__ == "__main__":
+    random.seed(100000)
+    np.random.seed(100000)
+    datasets = [load_breast_cancer(), load_digits(), load_iris(), load_wine()]#, load_linnerud
+    names = ['load_breast_cancer', 'load_digits', 'load_iris', "load_wine"]# 'load_linnerud'
+    data_s = [None for i in range(len(datasets))]
+    target_s = [None for i in range(len(datasets))]
+    target_names = [None for i in range(len(datasets))]
+    feature_names = [None for i in range(len(datasets))]
+    description  = [None for i in range(len(datasets))]
+    for i, dataset in enumerate(datasets):
+        data_s[i] = dataset.data
+        target_s[i] = dataset.target
+        pocket = list(zip(data_s[i], target_s[i]))
+       # print(pocket)
+        shuffle(pocket)
+        data_s[i] = [x[0] for x in pocket]
+        target_s[i] = [x[1] for x in pocket]
+        feature_names[i] = dataset.feature_names
+        description[i] = dataset.DESCR
+        target_names[i] = dataset.target_names
     turn  = 10
+    x_train, x_test, y_train, y_test = 0,0,0,0
     one_results = {}
+    train_liste = multiprocessing.Array('d', turn)
+    test_liste = multiprocessing.Array('d', turn)
+    time_liste = multiprocessing.Array('d', turn)
+    process = [0 for _ i range(turn)]
     for i in range(len(datasets)):
-        for total in [10, 50, 75, 100, 250, 500, 750, 1000,  1250, 1500, 1750, 2000, 2500]:
-            
-        train_liste = [0 for _ i range(turn)]
-        test_liste = [0 for _ i range(turn)]
-        time_liste = [0 for _ i range(turn)]
-        n_iter = 0
         x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
         x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
-        best2, time1 = main()
-        one_results[names[i]] = {'loss':loss[round(abs(best2[0]*6))%5], "learning_rate":learning_rate[round(best2[1]%3)], 'l1_ratio':abs(best2[2]%1),"alpha":10**(-3*best2[3]), "train_score": evalOneMax(best2)[0],'test_score': score(best2), "Temps d'exec(s)":time1, "Nbre d'évaluations":n_iter}
+        for total in [10, 50, 100, 250, 500, 750, 1000,  1250, 1500, 1750, 2000, 2500]:
+            for x in range(turn):
+                process[x] = Process(target = main, args = (total,x))
+            for x in range(turn):
+                process[x].start()
+            for x in range(turn):
+                process[x].join()
+        
+            one_results[names[i]] = {"test_score": np.mean(test_liste), "std_test":np.std(test_liste),"train_score":np.mean(train_liste) ,'std_train':np.std(test_liste) , "Time":np.mean(time_liste)}
