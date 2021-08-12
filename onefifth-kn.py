@@ -40,7 +40,7 @@ kernel = ["linear", "rbf", "poly","sigmoid"]
 def evalOneMax(value):
     #print("ICI")
     model = KNeighborsClassifier(n_neighbors=round(abs(value[0])*20)+1, p=round(abs(value[1])*5)+1, leaf_size=round(abs(value[2]*15))+1, algorithm="auto", weights="uniform", n_jobs=1)
-    scores = cross_val_score(model, x_train, y_train, cv = 3, n_jobs=-1)
+    scores = cross_val_score(model, x_train, y_train, cv = 3, n_jobs=1)
     return scores.mean(), #Add a comma even if there is only one return value
 
 def score(value):
