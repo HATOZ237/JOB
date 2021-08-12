@@ -137,7 +137,7 @@ if __name__ == "__main__":
     test_liste = multiprocessing.Array('d', turn)
     start = 0
     process = [0 for _ in range(turn)]
-    for total in [10, 50, 100]:#, 250, 500, 750, 1000,  1250, 1500, 1750, 2000, 2500]:
+    for total in [10, 50, 100, 250, 500, 750, 1000,  1250, 1500, 1750, 2000, 2500]:
         print(f"{total} essais demarré")
         for i in range(len(datasets)):
             x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
