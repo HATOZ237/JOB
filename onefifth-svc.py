@@ -39,6 +39,7 @@ kernel = ["linear", "rbf", "poly","sigmoid"]
 
 def evalOneMax(value):
     #lock = value[1]
+    print(value)
     while value[1] < -1.5:
         value[1] = value[1]/2   
     while value[0] > 1.9:
