@@ -85,7 +85,7 @@ for i, (name, data) in enumerate(zip(names, datasets)):
         x_train, x_test = pre_process.fit_transform(x_train), pre_process.fit_transform(x_test)
         
         #creation des grilles de recherches structurées et aleatoires 
-        grid_t = GridSearchCV(model, param_grid=param_Grid, cv=3, n_jobs=-1)
+        grid_t = GridSearchCV(model, param_grid=param_Grid, cv=3, n_jobs=-1, verbose = 1)
 
         best = 0
         start = time()
@@ -107,4 +107,4 @@ for i, (name, data) in enumerate(zip(names, datasets)):
 
         print(f"J'ai fini le traitement du dataset {names[i]}")
 pd.DataFrame(results_grid).to_csv("GRIDSEARCH-SVC")
-pd.DataFrame(results_grid).to_csv("GRIDRESULTS-SVC")
+pd.DataFrame(grid_dict).to_csv("GRIDRESULTS-SVC")
