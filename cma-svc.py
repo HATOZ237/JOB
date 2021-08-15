@@ -67,7 +67,7 @@ toolbox.register("individual", tools.initCycle, creator.Individual,
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)                       
 
 toolbox.register("mate", tools.cxTwoPoint)
-toolbox.register("mutate", tools.mutGaussian,mu = 0,sigma = 0.5, indpb=0.02)
+toolbox.register("mutate", tools.mutGaussian,mu = 0,sigma = 0.3, indpb=0.02)
 toolbox.register("select", tools.selBest)
 
 
@@ -116,7 +116,7 @@ def main():
             best2 = 0
             best_score = 0
             for k in range(turn):
-                strategy = cma.Strategy(centroid=[0,0,0], sigma=0.5, lambda_ = 10)
+                strategy = cma.Strategy(centroid=[0,0,0], sigma=0.3, lambda_ = 10)
                 toolbox.register("generate", strategy.generate, creator.Individual)
                 toolbox.register("update", strategy.update)
                 #print("--------turn : "+ str(k+1)+"---------")
