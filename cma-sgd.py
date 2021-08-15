@@ -52,7 +52,7 @@ for i, dataset in enumerate(datasets):
 
 np.random.seed(1000)
 n_iter = 0
-func_seq = [lambda:random.random(), lambda:random.random(), lambda:random.random(), lambda:random.gauss(0, 0.5)]
+func_seq = [lambda:random.random(), lambda:random.random(), lambda:random.random(), lambda:random.random()]
 loss = ['hinge', 'log', 'perceptron', 'modified_huber', "squared_hinge"]
 learning_rate = ["constant", 'optimal', 'adaptive', 'invscaling']
 model = 0
@@ -67,7 +67,7 @@ toolbox.register("individual", tools.initCycle, creator.Individual,
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)                       
 
 toolbox.register("mate", tools.cxTwoPoint)
-toolbox.register("mutate", tools.mutGaussian,mu = 0,sigma = 0.5, indpb=0.2)
+toolbox.register("mutate", tools.mutGaussian,mu = 0,sigma = 0.5, indpb=0.02)
 toolbox.register("select", tools.selBest)
 #pool = multiprocessing.Pool()
 #toolbox.register("map", pool.map)
@@ -75,27 +75,27 @@ toolbox.register("select", tools.selBest)
 def evalOneMax(value):
     loss = ['hinge', 'log', 'perceptron', 'modified_huber', "squared_hinge"]
     learning_rate = ["constant", 'optimal', 'adaptive', 'invscaling']
-    model = SGDClassifier(n_jobs=-1,eta0=0.00001, loss=loss[round(abs(value[0]*6))%4], learning_rate=learning_rate[round(abs(value[1]*5))%3], l1_ratio=abs(value[2]%1), alpha=10**(-3*value[3]))
+    model = SGDClassifier(n_jobs=-1,eta0=0.00001, loss=loss[round(abs(value[0]*6))%4], learning_rate=learning_rate[round(abs(value[1]*5))%3], l1_ratio=abs(value[2]%1), alpha=10**(-4*value[3]))
     scores = cross_val_score(model, x_train, y_train, cv = 3, n_jobs=-1)
     return scores.mean(), #Add a comma even if there is only one return value
 
 def evalOne(value):
     loss = ['hinge', 'log', 'perceptron', 'modified_huber', "squared_hinge"]
     learning_rate = ["constant", 'optimal', 'adaptive', 'invscaling']
-    model = SGDClassifier(n_jobs=-1,eta0=0.00001, loss=loss[round(abs(value[0]*6))%4], learning_rate=learning_rate[round(abs(value[1]*5))%3], l1_ratio=abs(value[2]%1), alpha=10**(-3*value[3]))
+    model = SGDClassifier(n_jobs=-1,eta0=0.00001, loss=loss[round(abs(value[0]*6))%4], learning_rate=learning_rate[round(abs(value[1]*5))%3], l1_ratio=abs(value[2]%1), alpha=10**(-4*value[3]))
     scores = cross_val_score(model, x_train, y_train, cv = 3, n_jobs=-1)
     return scores.mean(), #Add a comma even if there is only one return value
 
 def score(value):
     loss = ['hinge', 'log', 'perceptron', 'modified_huber', "squared_hinge"]
     learning_rate = ["constant", 'optimal', 'adaptive', 'invscaling']
-    model = SGDClassifier(n_jobs=-1,eta0=0.00001, loss=loss[round(abs(value[0]*6))%4], learning_rate=learning_rate[round(abs(value[1]*5))%3], l1_ratio=abs(value[2]%1), alpha=10**(-3*value[3]))
+    model = SGDClassifier(n_jobs=-1,eta0=0.00001, loss=loss[round(abs(value[0]*6))%4], learning_rate=learning_rate[round(abs(value[1]*5))%3], l1_ratio=abs(value[2]%1), alpha=10**(-4*value[3]))
     model.fit(x_train, y_train)
     return model.score(x_test, y_test)
 
 #calcul des performances
 def main():
-    for total in [ 150, 175, 200, 250]:
+    for total in [1, 5, 10, 25, 50, 75, 100, 125,  150, 175, 200, 250]:
         ea_results = {}
         cma_results = {}
 
