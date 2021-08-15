@@ -83,60 +83,28 @@ for i, (name, data) in enumerate(zip(names, datasets)):
         pre_process = StandardScaler()
         x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i],shuffle=False, train_size= trainrate)
         x_train, x_test = pre_process.fit_transform(x_train), pre_process.fit_transform(x_test)
-            #creation des grilles de recherches structurées et aleatoires 
-        grid_t = GridSearchCV(model, param_grid=param_Grid, cv=4, n_jobs=-1,verbose = 4)
-            #rand_t = RandomizedSearchCV(model, param_distributions= param_Grid, n_iter=n_itersearch, cv=3, n_jobs=-1, verbose = 2)
-            #tests[names[i]] = [x_train, x_test, y_train, y_test]
+        
+        #creation des grilles de recherches structurées et aleatoires 
+        grid_t = GridSearchCV(model, param_grid=param_Grid, cv=3, n_jobs=-1,verbose = 4)
 
-            """train_liste = [0 for _ in range(turn)]
-            test_liste = [0 for _ in range(turn)]
-            time_liste = [0 for _ in range(turn)]"""
         best = 0
         start = time()
         grid_t.fit(x_train, y_train)
-        time_grid[names[i]] = time() - start
+        #time_grid[names[i]] = time() - start
         results_grid[names[i]] = grid_t.best_params_
         start = time() - start
 
-
-                #entrainement et mesure du temps pour le random_search
-            '''start = time()
-            rand_t.fit(x_train, y_train)
-            time_liste[e] = time() - start
-            train_liste[e] = rand_t.best_score_
-                #time_rand[names[i]] = time() - start
-            if best<rand_t.best_score_:
-                results_rand[names[i]] = rand_t.best_params_
-                best = rand_t.best_score_'''
-
-
             #gridsearch
-         grid_dict[names[i]] = grid_t.cv_results_
-
-                #randomsearch
-                #rand_dict[names[i]] = rand_t.cv_results_
+        grid_dict[names[i]] = grid_t.cv_results_
 
             #scoring grid 
          model.set_params(**grid_t.best_params_)
          model.fit(x_train, y_train)
          results_grid[names[i]]['Test score'] = model.score(x_test, y_test)
-         results_grid[names[i]]["Score optimisation"] =  grid_t.best_score_
+         results_grid[names[i]]["Train score"] =  grid_t.best_score_
          results_grid[names[i]]["Temps d'execution(s)"] = start
-
-                #scoring rand
-         """model.set_params(**rand_t.best_params_)
-         model.fit(x_train, y_train)
-         test_liste[e] = model.score(x_test, y_test)"""
-        
-
-                
-            """results_rand[names[i]]['test_score'] = np.mean(test_liste)
-            results_rand[names[i]]['std_test'] = np.std(test_liste)
-            results_rand[names[i]]['train_score'] = np.mean(train_liste)
-            results_rand[names[i]]['std_train'] = np.std(train_liste)
-            results_rand[names[i]]["time"] = np.mean(time_liste)'''
-            #results_rand[names[i]]["std_time"] = np.std(time_liste)"""
 
 
          print(f"J'ai fini le traitement du dataset {names[i]}")
-  pd.DataFrame(results_grid).to_csv("GRIDSEARCH-SGD")
+pd.DataFrame(results_grid).to_csv("GRIDSEARCH-SGD")
+pd.DataFrame(results_grid).to_csv("GRIDSEARCH-SGD")
