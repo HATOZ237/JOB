@@ -51,7 +51,7 @@ for i, dataset in enumerate(datasets):
     target_names[i] = dataset.target_names
 
 n_iter = 0
-func_seq = [lambda:random.gauss(0,0.5), lambda:random.gauss(0,0.5), lambda:random.gauss(0,0.4)]
+func_seq = [lambda:random.random(), lambda:random.random(), lambda:np.random.randn()]
 
 x_train, x_test, y_train, y_test = [0]*4
 
@@ -67,19 +67,19 @@ toolbox.register("individual", tools.initCycle, creator.Individual,
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)                       
 
 toolbox.register("mate", tools.cxTwoPoint)
-toolbox.register("mutate", tools.mutGaussian,mu = 0,sigma = 0.2, indpb=0.2)
+toolbox.register("mutate", tools.mutGaussian,mu = 0,sigma = 0.2, indpb=0.02)
 toolbox.register("select", tools.selBest)
 
 
 def evalOneMax(value):
     if abs(value[2])>4:
         value[2] = 2
-    model = RandomForestClassifier(n_estimators=round(abs(value[2])*15)+1,max_features=abs(value[0])%1, max_samples=abs(value[1])%1, n_jobs=1)
+    model = RandomForestClassifier(n_estimators=round(abs(value[2])*45)+1,max_features=abs(value[0])%1, max_samples=abs(value[1])%1, n_jobs=1)
     scores = cross_val_score(model, x_train, y_train, cv = 3, n_jobs=1)
     return scores.mean(), #Add a comma even if there is only one return value
 
 def score(value):
-    model = RandomForestClassifier(n_estimators=round(abs(value[2])*15)+1,max_features=abs(value[0])%1, max_samples=abs(value[1])%1, n_jobs=1)
+    model = RandomForestClassifier(n_estimators=round(abs(value[2])*45)+1,max_features=abs(value[0])%1, max_samples=abs(value[1])%1, n_jobs=1)
     model.fit(x_train, y_train)
     return model.score(x_test, y_test)
 
@@ -132,7 +132,7 @@ def main():
                     best_score = score_tmp
                 train_liste[k] = best_score
                 test_liste[k] = score(best2) 
-            cma_results[names[i]] = {'n_estimators':round(abs(best2[2])*15)+1, "max_features":abs(best2[0])%1, 'max_samples':abs(best2[1])%1 , 'test_score': np.mean(test_liste),'std_test': np.std(test_liste),
+            cma_results[names[i]] = {'n_estimators':round(abs(best2[2])*45)+1, "max_features":abs(best2[0])%1, 'max_samples':abs(best2[1])%1 ,'max_test_score': max(test_score),'max_train_score':max(train-score),  'test_score': np.mean(test_liste),'std_test': np.std(test_liste),
                                      "train_score": np.mean(train_liste), "std_train":np.std(train_liste),"Time":np.mean(time_liste)}
         pd.DataFrame(cma_results).to_csv(f"CMA-RF-{str(total*10)}")
 
