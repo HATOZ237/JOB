@@ -104,8 +104,8 @@ def main():
             stats = tools.Statistics(lambda ind: ind.fitness.values)
             stats.register("avg", np.mean)
             stats.register("std", np.std)
-            #stats.register("min", np.min)
-            #stats.register("max", np.max)
+            stats.register("min", np.min)
+            stats.register("max", np.max)
 
             CXPB, MUTPB, NGEN, turn = 0.3, 0.2, total, 10
             start = time()
@@ -121,7 +121,7 @@ def main():
                 toolbox.register("update", strategy.update)
                 #print("--------turn : "+ str(k+1)+"---------")
                 start = time()
-                pops = algorithms.eaGenerateUpdate(toolbox, ngen=NGEN, stats=stats, halloffame=hof2, verbose = False)
+                pops = algorithms.eaGenerateUpdate(toolbox, ngen=NGEN, stats=stats, halloffame=hof2, verbose = True)
                 #print(len(pops[0]))
                 time_liste[k] = time()-start
                 pops = pops[0]
@@ -132,7 +132,7 @@ def main():
                     best_score = score_tmp
                 train_liste[k] = best_score
                 test_liste[k] = score(best2) 
-            cma_results[names[i]] = {"kernel":kernel[round(best2[2]%3)], "C":10**(4*best2[0]), 'gamma':10**(10**(-7.5*best2[1] + 2.5)), "max_test_score":max(test_liste), "max_train_score":max(train_liste), 'test_score': np.mean(test_liste),'std_test': np.std(test_liste),
+            cma_results[names[i]] = {"kernel":kernel[round(best2[2]%3)], "C":10**(4*best2[0]), 'gamma':10**(-7.5*best2[1] + 2.5), "max_test_score":max(test_liste), "max_train_score":max(train_liste), 'test_score': np.mean(test_liste),'std_test': np.std(test_liste),
                                      "train_score": np.mean(train_liste), "std_train":np.std(train_liste),"Time":np.mean(time_liste)}
         pd.DataFrame(cma_results).to_csv(f"CMA-SVC-{str(total*10)}")
 
