@@ -98,13 +98,13 @@ for i, (name, data) in enumerate(zip(names, datasets)):
         grid_dict[names[i]] = grid_t.cv_results_
 
             #scoring grid 
-         model.set_params(**grid_t.best_params_)
-         model.fit(x_train, y_train)
-         results_grid[names[i]]['Test score'] = model.score(x_test, y_test)
-         results_grid[names[i]]["Train score"] =  grid_t.best_score_
-         results_grid[names[i]]["Temps d'execution(s)"] = start
+        model.set_params(**grid_t.best_params_)
+        model.fit(x_train, y_train)
+        results_grid[names[i]]['Test score'] = model.score(x_test, y_test)
+        results_grid[names[i]]["Train score"] =  grid_t.best_score_
+        results_grid[names[i]]["Temps d'execution(s)"] = start
 
 
-         print(f"J'ai fini le traitement du dataset {names[i]}")
+        print(f"J'ai fini le traitement du dataset {names[i]}")
 pd.DataFrame(results_grid).to_csv("GRIDSEARCH-SGD")
 pd.DataFrame(results_grid).to_csv("GRIDSEARCH-SGD")
