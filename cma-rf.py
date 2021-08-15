@@ -132,7 +132,7 @@ def main():
                     best_score = score_tmp
                 train_liste[k] = best_score
                 test_liste[k] = score(best2) 
-            cma_results[names[i]] = {'n_estimators':round(abs(best2[2])*45)+1, "max_features":abs(best2[0])%1, 'max_samples':abs(best2[1])%1 ,'max_test_score': max(test_score),'max_train_score':max(train-score),  'test_score': np.mean(test_liste),'std_test': np.std(test_liste),
+            cma_results[names[i]] = {'n_estimators':round(abs(best2[2])*45)+1, "max_features":abs(best2[0])%1, 'max_samples':abs(best2[1])%1 ,'max_test_score': max(test_liste),'max_train_score':max(train_liste),  'test_score': np.mean(test_liste),'std_test': np.std(test_liste),
                                      "train_score": np.mean(train_liste), "std_train":np.std(train_liste),"Time":np.mean(time_liste)}
         pd.DataFrame(cma_results).to_csv(f"CMA-RF-{str(total*10)}")
 
