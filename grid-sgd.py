@@ -48,7 +48,7 @@ param_Grid = {"learning_rate":["optimal", 'invscaling', "adaptive", 'constant'],
 #param_Grid = {"C":np.logspace(-3.5, 4, num=25), "gamma":np.logspace(-5, 2.5, num = 25), "kernel":["rbf", "poly", "sigmoid", "linear"]}
 #random_Grid = {"C":loguniform(1e-1, 1e3), "gamma":loguniform(1e-5, 1e0), "kernel":["rbf", "poly", "sigmoid", 'linear']}
 
-n_itersearch = total
+#n_itersearch = total
 results_grid = {}
 results_rand = {}
 
