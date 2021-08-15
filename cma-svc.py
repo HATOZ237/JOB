@@ -85,7 +85,7 @@ def score(value):
 
 #calcul des performances
 def main():
-    for total in [1, 5, 10, 25, 50, 75, 100, 125, 150, 175, 200]:
+    for total in [ 100, 125, 150, 175, 200]:
         ea_results = {}
         cma_results = {}
 
