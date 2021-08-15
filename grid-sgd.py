@@ -85,7 +85,7 @@ for i, (name, data) in enumerate(zip(names, datasets)):
         x_train, x_test = pre_process.fit_transform(x_train), pre_process.fit_transform(x_test)
         
         #creation des grilles de recherches structurées et aleatoires 
-        grid_t = GridSearchCV(model, param_grid=param_Grid, cv=3, n_jobs=-1,verbose = 4)
+        grid_t = GridSearchCV(model, param_grid=param_Grid, cv=3, n_jobs=-1,verbose = 1)
 
         best = 0
         start = time()
