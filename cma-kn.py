@@ -51,7 +51,7 @@ for i, dataset in enumerate(datasets):
     target_names[i] = dataset.target_names
 
 n_iter = 0
-func_seq = [lambda:random.gauss(0,0.7), lambda:random.random(), lambda:random.gauss(0, 0.7)]
+func_seq = [lambda:random.gauss(0,0.5), lambda:random.random(), lambda:random.gauss(0, 0.5)]
 
 x_train, x_test, y_train, y_test = [0]*4
 
@@ -67,24 +67,24 @@ toolbox.register("individual", tools.initCycle, creator.Individual,
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)                       
 
 toolbox.register("mate", tools.cxTwoPoint)
-toolbox.register("mutate", tools.mutGaussian,mu = 0,sigma = 0.5, indpb=0.2)
+toolbox.register("mutate", tools.mutGaussian,mu = 0,sigma = 0.5, indpb=0.02)
 toolbox.register("select", tools.selBest)
 
 
 def evalOneMax(value):
     #print("ICI")
-    model = KNeighborsClassifier(n_neighbors=round(abs(value[0])*20)+1, p=round(abs(value[1])*5)+1, leaf_size=round(abs(value[2]*15))+1, algorithm="auto", weights="uniform", n_jobs=-1)
+    model = KNeighborsClassifier(n_neighbors=round(abs(value[0])*20)+1, p=round(abs(value[1])*5)+1, leaf_size=round(abs(value[2]*15))+1, n_jobs=-1)
     scores = cross_val_score(model, x_train, y_train, cv = 3, n_jobs=-1)
     return scores.mean(), #Add a comma even if there is only one return value
 
 def score(value):
-    model = KNeighborsClassifier(n_neighbors=round(abs(value[0])*20)+1, p=round(abs(value[1])*5)+1, leaf_size=round(abs(value[2])*15)+1, algorithm="auto", weights="uniform", n_jobs=-1)
+    model = KNeighborsClassifier(n_neighbors=round(abs(value[0])*20)+1, p=round(abs(value[1])*5)+1, leaf_size=round(abs(value[2])*15)+1, n_jobs=-1)
     model.fit(x_train, y_train)
     return model.score(x_test, y_test)
 
 #calcul des performances
 def main():
-    for total in [ 200]:
+    for total in [ 1, 5, 10, 25, 50, 75, 100, 125, 150, 175, 200, 250]:
         ea_results = {}
         cma_results = {}
 
