@@ -75,7 +75,7 @@ tests = {}
 turn = 15
 
 for i, (name, data) in enumerate(zip(names, datasets)):
-    model =  SGDClassifier(n_jobs=-1, eta0=0.00001)
+    model =  SVC()
         #automl = autosklearn.classification.AutoSklearnClassifier(time_left_for_this_task=30)
         # preprocessing 
     if(not(target_names[i] is None)):
