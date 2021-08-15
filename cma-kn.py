@@ -51,7 +51,7 @@ for i, dataset in enumerate(datasets):
     target_names[i] = dataset.target_names
 
 n_iter = 0
-func_seq = [lambda:random.gauss(0,0.7), lambda:random.random(), lambda:random.gauss(0, 0.7)]
+func_seq = [lambda:random.gauss(0,0.5), lambda:random.random(), lambda:random.gauss(0, 0.5)]
 
 x_train, x_test, y_train, y_test = [0]*4
 
@@ -67,7 +67,7 @@ toolbox.register("individual", tools.initCycle, creator.Individual,
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)                       
 
 toolbox.register("mate", tools.cxTwoPoint)
-toolbox.register("mutate", tools.mutGaussian,mu = 0,sigma = 0.5, indpb=0.2)
+toolbox.register("mutate", tools.mutGaussian,mu = 0,sigma = 0.5, indpb=0.02)
 toolbox.register("select", tools.selBest)
 
 
@@ -84,7 +84,7 @@ def score(value):
 
 #calcul des performances
 def main():
-    for total in [ 200]:
+    for total in [ 1, 5, 10, 25, 50, 75, 100, 125, 150, 175, 200, 250]:
         ea_results = {}
         cma_results = {}
 
