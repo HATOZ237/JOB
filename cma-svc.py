@@ -51,7 +51,7 @@ for i, dataset in enumerate(datasets):
     target_names[i] = dataset.target_names
 
 n_iter = 0
-func_seq = [lambda:random.gauss(0,0.6) , lambda:random.random(), lambda:random.random()]
+func_seq = [lambda:random.random() , lambda:random.random(), lambda:random.random()]
 
 x_train, x_test, y_train, y_test = [0]*4
 
@@ -73,13 +73,13 @@ toolbox.register("select", tools.selBest)
 
 def evalOneMax(value):
     #lock = value[1]
-    model = SVC(C = 10**(4*value[0]), gamma=10**(-7.5*abs(value[1]) + 2.5), kernel=kernel[round(abs(value[2]*4))%3])
+    model = SVC(C = 10**(-4*value[0] + 4), gamma=10**(-7.5*abs(value[1]) + 2.5), kernel=kernel[round(abs(value[2]*4))%3])
     scores = cross_val_score(model, x_train, y_train, cv = 3, n_jobs=1)
     #print(value)
     return scores.mean(), #Add a comma even if there is only one return value
 
 def score(value):
-    model = SVC(C = 10**(4*value[0]), gamma=10**(-7.5*abs(value[1]) + 2.5), kernel=kernel[round(abs(value[2]*4))%3])
+    model = SVC(C = 10**(-4*value[0] + 4), gamma=10**(-7.5*abs(value[1]) + 2.5), kernel=kernel[round(abs(value[2]*4))%3])
     model.fit(x_train, y_train)
     return model.score(x_test, y_test)
 
@@ -132,7 +132,7 @@ def main():
                     best_score = score_tmp
                 train_liste[k] = best_score
                 test_liste[k] = score(best2) 
-            cma_results[names[i]] = {"kernel":kernel[round(best2[2]%3)], "C":10**(4*best2[0]), 'gamma':10**(-7.5*abs(best2[1]) + 2.5), "max_test_score":max(test_liste), "max_train_score":max(train_liste), 'test_score': np.mean(test_liste),'std_test': np.std(test_liste),
+            cma_results[names[i]] = {"kernel":kernel[round(best2[2]%3)], "C":10**(-4*best2[0] + 4), 'gamma':10**(-7.5*abs(best2[1]) + 2.5), "max_test_score":max(test_liste), "max_train_score":max(train_liste), 'test_score': np.mean(test_liste),'std_test': np.std(test_liste),
                                      "train_score": np.mean(train_liste), "std_train":np.std(train_liste),"Time":np.mean(time_liste)}
         pd.DataFrame(cma_results).to_csv(f"CMA-SVC-{str(total*10)}")
 
