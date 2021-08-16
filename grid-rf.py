@@ -107,4 +107,4 @@ for i, (name, data) in enumerate(zip(names, datasets)):
 
         print(f"J'ai fini le traitement du dataset {names[i]}")
 pd.DataFrame(results_grid).to_csv("GRIDSEARCH-RF")
-pd.DataFrame(grid_dict).to_csv("GRIDRESULTS-RF")
+pd.DataFrame(grid_dict).to_pickle("GRIDRESULTS-RF")
