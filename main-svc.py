@@ -139,6 +139,8 @@ for total in x_axis:
                 model.set_params(**rand_t.best_params_)
                 model.fit(x_train, y_train)
                 test_liste[e] = model.score(x_test, y_test) 
+            results_rand[names[i]]['max_train_score'] = np.max(train_liste)
+            results_rand[names[i]]['max_test_score'] = np.max(test_liste)
             results_rand[names[i]]['test_score'] = np.mean(test_liste)
             results_rand[names[i]]['std_test'] = np.std(test_liste)
             results_rand[names[i]]['train_score'] = np.mean(train_liste)
@@ -148,4 +150,4 @@ for total in x_axis:
 
 
             print(f"J'ai fini le traitement du dataset {names[i]}")
-    pd.DataFrame(results_rand).to_csv(f"RANDSEARCH-SVC-{str(total)}")
+    pd.DataFrame(results_rand).to_csv(f"RANDSEARCHS-SVC-{str(total)}")
