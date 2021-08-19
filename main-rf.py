@@ -55,7 +55,7 @@ param_Grid = {"max_features":np.linspace(0.001,0.999, num=10), "max_samples":np.
 #random_Grid = {"C":loguniform(1e-1, 1e3), "gamma":loguniform(1e-5, 1e0), "kernel":["rbf", "poly", "sigmoid", 'linear']}
 
 
-x_axis = [1250, 1500, 1750, 2000, 2500]
+x_axis = [10, 50, 100, 250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2500]
 
 for total in x_axis:
     n_itersearch = total
