@@ -146,6 +146,6 @@ if __name__ == "__main__":
                 process[x].join()
             start = time() - start
         
-            one_results[names[i]] = {"test_score": np.mean(test_liste), "std_test":np.std(test_liste),"train_score":np.mean(train_liste) ,'std_train':np.std(test_liste) , "Time":start/turn}
-        pd.DataFrame(one_results).to_csv(f"ONEFIFTH-RF-{total}")
+            one_results[names[i]] = {"max_test_score": np.max(test_liste),"max_train_score":np.max(train_liste), "test_score": np.mean(test_liste), "std_test":np.std(test_liste),"train_score":np.mean(train_liste) ,'std_train':np.std(test_liste) , "Time":start/turn}
+        pd.DataFrame(one_results).to_csv(f"ONEFIFTHS-RF-{total}")
         print(f"{total} essais terminé")
