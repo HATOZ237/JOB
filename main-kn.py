@@ -55,7 +55,7 @@ param_Grid = {"n_neighbors":np.arange(1,40, 1), "p":np.arange(1,5), "leaf_size":
 #random_Grid = {"C":loguniform(1e-1, 1e3), "gamma":loguniform(1e-5, 1e0), "kernel":["rbf", "poly", "sigmoid", 'linear']}
 
 
-x_axis = [10, 50, 100, 250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2500]
+x_axis = [2000, 2500]
 
 for total in x_axis:
     n_itersearch = total
