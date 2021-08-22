@@ -15,7 +15,7 @@ import seaborn as sns
 import pandas as pd
 from time import time
 import scipy.stats as stats
-from sklearn.utils.fixes import loguniform
+
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from sklearn.linear_model import SGDClassifier
 import random
