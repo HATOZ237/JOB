@@ -55,7 +55,7 @@ param_Grid = {"learning_rate":["optimal", 'invscaling', "adaptive", 'constant'],
 #random_Grid = {"C":loguniform(1e-1, 1e3), "gamma":loguniform(1e-5, 1e0), "kernel":["rbf", "poly", "sigmoid", 'linear']}
 
 
-x_axis = [1000, 2000, 2500]
+x_axis = [1250]
 
 for total in x_axis:
     n_itersearch = total
