@@ -73,12 +73,12 @@ toolbox.register("select", tools.selBest)
 
 def evalOneMax(value):
     #print("ICI")
-    model = KNeighborsClassifier(n_neighbors=round(abs(value[0])*20)+1, p=round(abs(value[1])*5)+1, leaf_size=round(abs(value[2]*15))+1)
-    scores = cross_val_score(model, x_train, y_train, cv = 3, n_jobs=1)
+    model = KNeighborsClassifier(n_neighbors=round(abs(value[0])*20)+1, p=round(abs(value[1])*5)+1, leaf_size=round(abs(value[2]*15))+1, n_jobs=-1)
+    scores = cross_val_score(model, x_train, y_train, cv = 3, n_jobs=--1)
     return scores.mean(), #Add a comma even if there is only one return value
 
 def score(value):
-    model = KNeighborsClassifier(n_neighbors=round(abs(value[0])*20)+1, p=round(abs(value[1])*5)+1, leaf_size=round(abs(value[2])*15)+1)
+    model = KNeighborsClassifier(n_neighbors=round(abs(value[0])*20)+1, p=round(abs(value[1])*5)+1, leaf_size=round(abs(value[2])*15)+1, n_jobs=-1)
     model.fit(x_train, y_train)
     return model.score(x_test, y_test)
 
@@ -94,8 +94,8 @@ def main():
             x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
             x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
             toolbox.register("evaluate", evalOneMax)
-            pool = multiprocessing.Pool()
-            toolbox.register("map", pool.map)
+            #pool = multiprocessing.Pool()
+            #toolbox.register("map", pool.map)
             #pop = toolbox.population(n=10*N)
             #print(pop)
             hof1 = tools.HallOfFame(50)
