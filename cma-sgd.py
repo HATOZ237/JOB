@@ -143,7 +143,7 @@ def main():
                     best_score = score_tmp
                 train_liste[k] = best_score
                 test_liste[k] = score(best2) 
-            cma_results[names[i]] = {'loss':loss[round(abs(best2[0]*6))%4], "learning_rate":learning_rate[round(best2[1]%3)], 'l1_ratio':abs(best2[2]%1),"alpha":10**(-3*best2[3]), 'test_score': np.mean(test_liste),'std_test': np.std(test_liste),
+            cma_results[names[i]] = {'loss':loss[round(abs(best2[0]*6))%4], "learning_rate":learning_rate[round(best2[1]%3)], 'l1_ratio':abs(best2[2]%1),"alpha":10**(-3*best2[3]), "max_test_score":max(test_liste), "max_train_score":max(train_liste),'test_score': np.mean(test_liste),'std_test': np.std(test_liste),
                                      "train_score": np.mean(train_liste), "std_train":np.std(train_liste),"Time":np.mean(time_liste)}
         pd.DataFrame(cma_results).to_csv(f"CMA-SGD-{str(total*10)}")
         print("\n")
