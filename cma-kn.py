@@ -96,7 +96,7 @@ def main():
             toolbox.register("evaluate", evalOneMax)
             pool = multiprocessing.Pool()
             toolbox.register("map", pool.map)
-            pop = toolbox.population(n=10*N)
+            #pop = toolbox.population(n=10*N)
             #print(pop)
             hof1 = tools.HallOfFame(50)
             hof2 = tools.HallOfFame(50)
