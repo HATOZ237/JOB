@@ -131,7 +131,7 @@ def main():
                     best_score = score_tmp
                 train_liste[k] = best_score
                 test_liste[k] = score(best2) 
-            cma_results[names[i]] = {'n_neighbors':round(abs(best2[0])*30)+1, "p":round(abs(best2[1])*5)+1, 'leaf_size':round(abs(best2[2])*15)+1, 'test_score': np.mean(test_liste),'std_test': np.std(test_liste),
+            cma_results[names[i]] = {'n_neighbors':round(abs(best2[0])*30)+1, "p":round(abs(best2[1])*5)+1, 'leaf_size':round(abs(best2[2])*15)+1,"max_test_score":max(test_liste), "max_train_score":max(train_liste), 'test_score': np.mean(test_liste),'std_test': np.std(test_liste),
                                      "train_score": np.mean(train_liste), "std_train":np.std(train_liste),"Time":np.mean(time_liste)}
         pd.DataFrame(cma_results).to_csv(f"CMA-KN-{str(total*10)}")
 
