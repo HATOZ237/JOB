@@ -75,8 +75,8 @@ toolbox.register("select", tools.selBest)
 def evalOneMax(value):
     loss = ['hinge', 'log', 'perceptron', 'modified_huber', "squared_hinge"]
     learning_rate = ["constant", 'optimal', 'adaptive', 'invscaling']
-    model = SGDClassifier(n_jobs=-1,eta0=0.00001, loss=loss[round(abs(value[0]*6))%4], learning_rate=learning_rate[round(abs(value[1]*5))%3], l1_ratio=abs(value[2]%1), alpha=10**(-4*value[3]))
-    scores = cross_val_score(model, x_train, y_train, cv = 3, n_jobs=-1)
+    model = SGDClassifier(n_jobs=1,eta0=0.00001, loss=loss[round(abs(value[0]*6))%4], learning_rate=learning_rate[round(abs(value[1]*5))%3], l1_ratio=abs(value[2]%1), alpha=10**(-4*value[3]))
+    scores = cross_val_score(model, x_train, y_train, cv = 3, n_jobs=1)
     return scores.mean(), #Add a comma even if there is only one return value
 
 def evalOne(value):
