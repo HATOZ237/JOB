@@ -121,9 +121,9 @@ def main():
                 best_score[i] = train_liste[0]
             cma_results[names[i]] = {"kernel": kernel[round(best2[2] % 3)], "C": 10 ** (-4 * best2[0] + 4),
                                      'gamma': 10 ** (-7.5 * abs(best2[1]) + 2.5),
-                                     "max_train_score": max(train_liste), 'test_score': score(best2),
-                                     "train_score": best_score[i], "std_train": np.std(train_liste),
-                                     "Time": times}
+                                     "max_train_score": best_score[i], 'test_score': score(best2),
+                                     "train_score": max(train_liste), "std_train": np.std(train_liste),
+                                     "Time": times[i]}
 
         pd.DataFrame(cma_results).to_csv(f"CMAS-SVC-{str((k + 1) * 100)}")
 
