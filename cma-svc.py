@@ -105,7 +105,7 @@ def main():
             time_liste = [0 for _ in range(turn)]
             print("------------------- Data : " + names[i] + " ------------------------")
             best2 = 0
-            strategy = cma.Strategy(centroid=[ random(), random(), random()], sigma=0.3, lambda_=1)
+            strategy = cma.Strategy(centroid=[ random(), random(), random()], sigma=0.3, lambda_=10)
             toolbox.register("generate", strategy.generate, creator.Individual)
             toolbox.register("update", strategy.update)
 
