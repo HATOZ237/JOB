@@ -60,7 +60,7 @@ f = lambda x: x[0]
 
 
 def evalOneMax(value):
-    print(value)
+    #print(value)
     # lock = value[1]
     model = SVC(C=10 ** (-4 * abs(value[0]) + 4), gamma=10 ** (-7.5 * abs(value[1]) + 2.5),
                 kernel=kernel[round(abs(value[2] * 4)) % 3])
