@@ -86,7 +86,7 @@ def score(value):
 
 #calcul des performances
 def main():
-    for total in [250]:
+    for total in [1, 5, 10, 25, 50, 75, 100, 125, 150, 175, 200, 250]:
         ea_results = {}
         cma_results = {}
 
@@ -100,8 +100,8 @@ def main():
             toolbox.register("map", pool.map)
             #pop = toolbox.population(n=10*N)
             #print(pop)
-            hof1 = tools.HallOfFame(50)
-            hof2 = tools.HallOfFame(50)
+            #hof1 = tools.HallOfFame(50)
+            hof2 = tools.HallOfFame(3)
             stats = tools.Statistics(lambda ind: ind.fitness.values)
             stats.register("avg", np.mean)
             stats.register("std", np.std)
@@ -125,8 +125,8 @@ def main():
                 pops = algorithms.eaGenerateUpdate(toolbox, ngen=NGEN, stats=stats, halloffame=hof2, verbose = False)
                 #print(len(pops[0]))
                 time_liste[k] = time()-start
-                pops = pops[0]
-                best = pops[np.argmax([toolbox.evaluate(x) for x in pops])]
+                pop = hof2[0]
+                best = pop
                 score_tmp = evalOneMax(best)[0]
                 if best_score < score_tmp:
                     best2 = best
