@@ -79,8 +79,8 @@ def score(value):
 # calcul des performances
 def main():
     cma_results = {}
-    best_score = 0
-    times = 0
+    best_score = [0]*4
+    times = [0]*4
     for k in range(20):
         for i in range(len(datasets)):
             global x_train, x_test, y_train, y_test
@@ -113,20 +113,20 @@ def main():
             # print("--------turn : "+ str(k+1)+"---------")
             start = time()
             pops = algorithms.eaGenerateUpdate(toolbox, ngen=NGEN, stats=stats, halloffame=hof2, verbose=False)
-            times = times + time() - start
+            times[i] = times[i] + time() - start
             best2 = hof2[0]
             pops = hof2
             scores = toolbox.map(toolbox.evaluate, hof2)
             train_liste = list(map(f, scores))
-            if best_score < train_liste[0]:
+            if best_score[i] < train_liste[0]:
                 best_score = train_liste[0]
             cma_results[names[i]] = {"kernel": kernel[round(best2[2] % 3)], "C": 10 ** (-4 * best2[0] + 4),
                                      'gamma': 10 ** (-7.5 * abs(best2[1]) + 2.5),
                                      "max_train_score": max(train_liste), 'test_score': score(best2),
-                                     "train_score": best_score, "std_train": np.std(train_liste),
+                                     "train_score": best_score[i], "std_train": np.std(train_liste),
                                      "Time": times}
 
-        pd.DataFrame(cma_results).to_csv(f"CMAS-SVC-{str(k * 1000)}")
+        pd.DataFrame(cma_results).to_csv(f"CMAS-SVC-{str((k + 1) * 100)}")
 
 
 if __name__ == "__main__":
