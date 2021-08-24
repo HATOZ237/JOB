@@ -105,7 +105,7 @@ def main():
             time_liste = [0 for _ in range(turn)]
             print("------------------- Data : " + names[i] + " ------------------------")
             best2 = 0
-            strategy = cma.Strategy(centroid=[0, 0, 0], sigma=0.3, lambda_=10)
+            strategy = cma.Strategy(centroid=[ random.random(), random.random(), random.random()], sigma=0.3, lambda_=1)
             toolbox.register("generate", strategy.generate, creator.Individual)
             toolbox.register("update", strategy.update)
 
@@ -117,12 +117,12 @@ def main():
             pops = hof2
             scores = toolbox.map(toolbox.evaluate, hof2)
             train_liste = list(map(f, scores))
-            if best_score[i] < train_liste[0]:
-                best_score[i] = train_liste[0]
+            if best_score[i] < max(train_liste):
+                best_score[i] = max(train_liste)
             cma_results[names[i]] = {"kernel": kernel[round(best2[2] % 3)], "C": 10 ** (-4 * best2[0] + 4),
                                      'gamma': 10 ** (-7.5 * abs(best2[1]) + 2.5),
                                      "max_train_score": best_score[i], 'test_score': score(best2),
-                                     "train_score": max(train_liste), "std_train": np.std(train_liste),
+                                     "train_score": np.mean(train_liste), "std_train": np.std(train_liste),
                                      "Time": times[i]}
 
         pd.DataFrame(cma_results).to_csv(f"CMAS-SVC-{str((k + 1) * 100)}")
