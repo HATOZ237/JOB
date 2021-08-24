@@ -119,7 +119,7 @@ def main():
             scores = toolbox.map(toolbox.evaluate, hof2)
             train_liste = list(map(f, scores))
             if best_score[i] < train_liste[0]:
-                best_score = train_liste[0]
+                best_score[i] = train_liste[0]
             cma_results[names[i]] = {"kernel": kernel[round(best2[2] % 3)], "C": 10 ** (-4 * best2[0] + 4),
                                      'gamma': 10 ** (-7.5 * abs(best2[1]) + 2.5),
                                      "max_train_score": max(train_liste), 'test_score': score(best2),
