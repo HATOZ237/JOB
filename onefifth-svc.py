@@ -1,14 +1,19 @@
+import multiprocessing
 import random
 from random import *
 from time import time
 
-# from matplotlib import  pyplot as plt
+import numpy as np
+import pandas as pd
+from deap import algorithms
 from deap import base
+from deap import cma
 from deap import creator
 from deap import tools
-from sklearn.model_selection import cross_val_score
+from sklearn.datasets import *
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
-
 kernel = ["linear", "rbf", "poly", "sigmoid"]
 
 
