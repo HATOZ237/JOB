@@ -131,6 +131,6 @@ if __name__ == "__main__":
             one_results[names[i]] = {"kernel": kernel[round(best2[2] % 3)], "C": 10 ** (-4 * best2[0] + 4),
                                      'gamma': 10 ** (-7.5 * abs(best2[1]) + 2.5),
                                      "test_score": score(best2),
-                                     "train_score": train_score,
+                                     "train_score": best_score,
                                      "Time": start[i]}
         pd.DataFrame(one_results).to_csv(f"ONEFIFTH-SVC-{(total + 1) * 20}")
