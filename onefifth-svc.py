@@ -3,14 +3,10 @@ from random import *
 from time import time
 
 # from matplotlib import  pyplot as plt
-import numpy as np
-import pandas as pd
 from deap import base
 from deap import creator
 from deap import tools
-from sklearn.datasets import *
-from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import cross_val_score
 from sklearn.svm import SVC
 
 kernel = ["linear", "rbf", "poly", "sigmoid"]
@@ -79,12 +75,14 @@ def main(ngen):
             best, worst = worst, best
         else:
             sigma = sigma * alpha ** (-0.25)
-        logbook.record(gen=g, fitness=best.fitness.values[0], C=10 ** (-4 * abs(best[0]) + 4), gamma=10 ** (-7.5 * abs(best[1]) + 2.5),
-                kernel=kernel[round(abs(best[2] * 4)) % 3], score=evalOneMax(best)[0])
-        print(logbook.stream)
-        if best_score < best.fitness.values[0]:
-            best_score = best.fitness.values[0]
-            save = best
+    logbook.record(gen=g, fitness=best.fitness.values[0], C=10 ** (-4 * abs(best[0]) + 4),
+                   gamma=10 ** (-7.5 * abs(best[1]) + 2.5),
+                   kernel=kernel[round(abs(best[2] * 4)) % 3], score=evalOneMax(best)[0])
+    print(logbook.stream)
+    if best_score < best.fitness.values[0]:
+        best_score = best.fitness.values[0]
+        save = best
+
     # print("Fin de l'algorithme en "+ str(n_iter)+" tours")
     start = time() - start
 
@@ -116,8 +114,8 @@ if __name__ == "__main__":
     x_train, x_test, y_train, y_test = 0, 0, 0, 0
     one_results = {}
     start = [0] * 4
-    best_score = [0]*4
-    best2 = [0]*4
+    best_score = [0] * 4
+    best2 = [0] * 4
     process = [0 for _ in range(turn)]
     for total in range(80):
         print(f"{total + 1} essais ")
@@ -135,4 +133,4 @@ if __name__ == "__main__":
                                      "test_score": score(best2[i]),
                                      "train_score": best_score[i],
                                      "Time": start[i]}
-        #pd.DataFrame(one_results).to_csv(f"ONEFIFTH-SVC-{(total + 1) * 20}")
+        pd.DataFrame(one_results).to_csv(f"ONEFIFTH-SVC-{(total + 1) * 25}")
