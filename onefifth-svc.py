@@ -61,7 +61,7 @@ def main(ngen):
     start = time()
     func = [gauss(0, 0.5), gauss(0, 0.5), random()]
     mu = func
-    sigma = 0.5
+    sigma = 0.2
     alpha = 2.0 ** (1.0 / IND_SIZE)
 
     best = creator.Individual(mu)
