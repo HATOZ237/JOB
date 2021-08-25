@@ -119,7 +119,7 @@ if __name__ == "__main__":
     best_score = [0]*4
     best2 = [0]*4
     process = [0 for _ in range(turn)]
-    for total in range(100):
+    for total in range(200):
         print(f"{total + 1} essais ")
         for i in range(len(datasets)):
             x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
