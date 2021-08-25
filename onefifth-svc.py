@@ -128,8 +128,8 @@ if __name__ == "__main__":
                 best_score[i] = train_score
                 best2[i] = best
             start[i] = start[i] + time1
-            one_results[names[i]] = {"kernel": kernel[round(best2[2] % 3)], "C": 10 ** (-4 * best2[0] + 4),
-                                     'gamma': 10 ** (-7.5 * abs(best2[1]) + 2.5),
+            one_results[names[i]] = {"kernel": kernel[round(best2[i][2] % 3)], "C": 10 ** (-4 * best2[i][0] + 4),
+                                     'gamma': 10 ** (-7.5 * abs(best2[i][1]) + 2.5),
                                      "test_score": score(best2[i]),
                                      "train_score": best_score[i],
                                      "Time": start[i]}
