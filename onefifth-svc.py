@@ -59,7 +59,7 @@ def main(ngen):
 
     # interval = (-3,7)
     start = time()
-    func = [gauss(0, 0.5), gauss(0, 0.5), random()]
+    func = [random(), random(), random()]
     mu = func
     sigma = 0.2
     alpha = 2.0 ** (1.0 / IND_SIZE)
