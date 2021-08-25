@@ -18,18 +18,16 @@ kernel = ["linear", "rbf", "poly", "sigmoid"]
 def evalOneMax(value):
     # lock = value[1]
     # print(value)
-    while value[1] < -1.5:
-        value[1] = value[1] / 2
-    while value[0] > 1.9:
-        value[0] = value[0] / 2
-    model = SVC(C=10 ** (3 * value[0]), gamma=10 ** (-3 * value[1]), kernel=kernel[round(abs(value[2] * 4)) % 3])
+    model = SVC(C=10 ** (-4 * abs(value[0]) + 4), gamma=10 ** (-7.5 * abs(value[1]) + 2.5),
+                kernel=kernel[round(abs(value[2] * 4)) % 3])
     scores = cross_val_score(model, x_train, y_train, cv=3, n_jobs=1)
     # print(value)
     return scores.mean(),  # Add a comma even if there is only one return value
 
 
 def score(value):
-    model = SVC(C=10 ** (3 * value[0]), gamma=10 ** (-3 * value[1]), kernel=kernel[round(abs(value[2] * 4)) % 3])
+    model = SVC(C=10 ** (-4 * abs(value[0]) + 4), gamma=10 ** (-7.5 * abs(value[1]) + 2.5),
+                kernel=kernel[round(abs(value[2] * 4)) % 3])
     model.fit(x_train, y_train)
     return model.score(x_test, y_test)
 
@@ -88,7 +86,7 @@ def main(ngen):
     # print("Fin de l'algorithme en "+ str(n_iter)+" tours")
     start = time() - start
 
-    return best_score, score(save), start
+    return save, start
 
 
 if __name__ == "__main__":
@@ -115,17 +113,24 @@ if __name__ == "__main__":
     turn = 10
     x_train, x_test, y_train, y_test = 0, 0, 0, 0
     one_results = {}
-    start = [0]*4
+    start = [0] * 4
+    best_score = 0
+    best2 = 0
     process = [0 for _ in range(turn)]
     for total in range(100):
         print(f"{total + 1} essais ")
         for i in range(len(datasets)):
             x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
             x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
-            train_score, test_score, time1 = main(20)
+            best, time1 = main(20)
+            train_score = evalOneMax(best)[0]
+            if best_score < train_score:
+                best_score = train_score
+                best2 = best
             start[i] = start[i] + time1
-            one_results[names[i]] = {
-                "test_score": test_score,
-                "train_score": train_score,
-                "Time": start[i]}
+            one_results[names[i]] = {"kernel": kernel[round(best2[2] % 3)], "C": 10 ** (-4 * best2[0] + 4),
+                                     'gamma': 10 ** (-7.5 * abs(best2[1]) + 2.5),
+                                     "test_score": score(best2),
+                                     "train_score": train_score,
+                                     "Time": start[i]}
         pd.DataFrame(one_results).to_csv(f"ONEFIFTH-SVC-{(total + 1) * 20}")
