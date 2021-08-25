@@ -53,8 +53,8 @@ def main(ngen):
 
     # random.seed(64)
 
-    # logbook = tools.Logbook()
-    # logbook.header = "gen", "fitness", 'loss', 'alpha', 'l1_ratio',"learning_rate", "score"
+    logbook = tools.Logbook()
+    logbook.header = "gen", "fitness", 'C', 'kernel', 'gamma', "score"
 
     # interval = (-3,7)
     start = time()
@@ -78,8 +78,9 @@ def main(ngen):
             best, worst = worst, best
         else:
             sigma = sigma * alpha ** (-0.25)
-            # logbook.record(gen=g, fitness=best.fitness.values[0], loss=loss[round(abs(best[0]*6))%5], learning_rate=learning_rate[round(abs(best[1]*5))%4], l1_ratio=abs(best[2]%1), alpha=10**(-3*best[3]), score=score(best))
-        # print(logbook.stream)
+        logbook.record(gen=g, fitness=best.fitness.values[0], C=10 ** (-4 * abs(best[0]) + 4), gamma=10 ** (-7.5 * abs(best[1]) + 2.5),
+                kernel=kernel[round(abs(best[2] * 4)) % 3], score=evalOneMax(best)[0])
+        print(logbook.stream)
         if best_score < best.fitness.values[0]:
             best_score = best.fitness.values[0]
             save = best
@@ -133,4 +134,4 @@ if __name__ == "__main__":
                                      "test_score": score(best2[i]),
                                      "train_score": best_score[i],
                                      "Time": start[i]}
-        pd.DataFrame(one_results).to_csv(f"ONEFIFTH-SVC-{(total + 1) * 20}")
+        #pd.DataFrame(one_results).to_csv(f"ONEFIFTH-SVC-{(total + 1) * 20}")
