@@ -81,7 +81,7 @@ def main():
     cma_results = {}
     best_score = [0]*4
     times = [0]*4
-    for k in range(20):
+    for k in range(80):
         for i in range(len(datasets)):
             global x_train, x_test, y_train, y_test
             x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
@@ -99,7 +99,7 @@ def main():
             stats.register("min", np.min)
             stats.register("max", np.max)
 
-            CXPB, MUTPB, NGEN, turn = 0.3, 0.2, 100, 10
+            CXPB, MUTPB, NGEN, turn = 0.3, 0.2, 50, 5
             train_liste = [0 for _ in range(turn)]
             test_liste = [0 for _ in range(turn)]
             time_liste = [0 for _ in range(turn)]
@@ -125,7 +125,7 @@ def main():
                                      "train_score": np.mean(train_liste), "std_train": np.std(train_liste),
                                      "Time": times[i]}
 
-        pd.DataFrame(cma_results).to_csv(f"CMAS-SVC-{str((k + 1) * 100)}")
+        pd.DataFrame(cma_results).to_csv(f"CMAS-SVC-{str((k + 1) * 50)}")
 
 
 if __name__ == "__main__":
