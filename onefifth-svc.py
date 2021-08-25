@@ -60,7 +60,7 @@ def main(ngen):
 
     # interval = (-3,7)
     start = time()
-    func = [random.gauss(0, 0.5), random.gauss(0, 0.5), random.random()]
+    func = [gauss(0, 0.5), gauss(0, 0.5), random()]
     mu = func
     sigma = 0.5
     alpha = 2.0 ** (1.0 / IND_SIZE)
@@ -92,7 +92,7 @@ def main(ngen):
 
 
 if __name__ == "__main__":
-    random.seed(100000)
+    seed(100000)
     np.random.seed(100000)
     datasets = [load_breast_cancer(), load_digits(), load_iris(), load_wine()]  # , load_linnerud
     names = ['load_breast_cancer', 'load_digits', 'load_iris', "load_wine"]  # 'load_linnerud'
