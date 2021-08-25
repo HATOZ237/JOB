@@ -128,4 +128,4 @@ if __name__ == "__main__":
                 "test_score": test_score,
                 "train_score": train_score,
                 "Time": start[i]}
-        pd.DataFrame(one_results).to_csv(f"ONEFIFTHS-SVC-{(total + 1) * 20}")
+        pd.DataFrame(one_results).to_csv(f"ONEFIFTH-SVC-{(total + 1) * 20}")
