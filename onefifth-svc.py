@@ -115,7 +115,7 @@ if __name__ == "__main__":
     turn = 10
     x_train, x_test, y_train, y_test = 0, 0, 0, 0
     one_results = {}
-    start = [0]
+    start = [0]*4
     process = [0 for _ in range(turn)]
     for total in range(100):
         print(f"{total + 1} essais ")
