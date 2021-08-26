@@ -44,6 +44,8 @@ param_Grid = {"learning_rate": ["optimal", 'invscaling', "adaptive", 'constant']
 
 x_axis = [2000]
 tab = {}
+for i in range(len(names)):
+    tab[names[i]] = [0 for _ in range(10)]
 for total in x_axis:
     n_itersearch = total
     results_grid = {}

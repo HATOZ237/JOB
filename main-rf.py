@@ -58,6 +58,8 @@ param_Grid = {"max_features":np.linspace(0.001,0.999, num=10), "max_samples":np.
 
 x_axis = [2000]
 tab = {}
+for i in range(len(names)):
+    tab[names[i]] = [0 for _ in range(10)]
 for total in x_axis:
     n_itersearch = total
     results_grid = {}
