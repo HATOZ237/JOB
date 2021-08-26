@@ -1,4 +1,5 @@
 import multiprocessing
+import pickle
 import random
 from random import *
 from time import time
@@ -14,7 +15,6 @@ from sklearn.datasets import *
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
-import pickle
 
 seed(100000)
 np.random.seed(100000)
@@ -38,6 +38,9 @@ for i, dataset in enumerate(datasets):
     target_names[i] = dataset.target_names
 
 n_iter = 0
+tab = {}
+for i in range(len(names)):
+    tab[names[i]] = np.array([[0 for _ in range(10)] for k in range(10)])
 func_seq = [lambda: random(), lambda: random(), lambda: random()]
 
 x_train, x_test, y_train, y_test = [0] * 4
@@ -61,7 +64,7 @@ f = lambda x: x[0]
 
 
 def evalOneMax(value):
-    #print(value)
+    # print(value)
     # lock = value[1]
     model = SVC(C=10 ** (-4 * abs(value[0]) + 4), gamma=10 ** (-7.5 * abs(value[1]) + 2.5),
                 kernel=kernel[round(abs(value[2] * 4)) % 3])
@@ -80,8 +83,8 @@ def score(value):
 # calcul des performances
 def main(id):
     cma_results = {}
-    best_score = [0]*4
-    times = [0]*4
+    best_score = [0] * 4
+    times = [0] * 4
     for k in range(10):
         for i in range(len(datasets)):
             global x_train, x_test, y_train, y_test
@@ -106,7 +109,7 @@ def main(id):
             time_liste = [0 for _ in range(turn)]
 
             best2 = 0
-            strategy = cma.Strategy(centroid=[ random(), random(), random()], sigma=0.3, lambda_=4)
+            strategy = cma.Strategy(centroid=[random(), random(), random()], sigma=0.3, lambda_=4)
             toolbox.register("generate", strategy.generate, creator.Individual)
             toolbox.register("update", strategy.update)
 
@@ -131,10 +134,6 @@ def main(id):
 
 
 if __name__ == "__main__":
-    tab = {}
-    for i in range(len(names)):
-        tab[names[i]] = np.array([[0 for _ in range(10)] for k in range(10)])
-        #print(tab[names[i]])
     for id in range(1):
         print("------------------- Tour  : " + str(id) + " ------------------------")
         main(id)
