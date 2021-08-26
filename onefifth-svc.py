@@ -14,14 +14,14 @@ from sklearn.datasets import *
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
-kernel = ["linear", "rbf", "poly", "sigmoid"]
+kernel = ["rbf", "poly", "sigmoid", 'linear']
 
 
 def evalOneMax(value):
     # lock = value[1]
     # print(value)
     model = SVC(C=10 ** (-4 * abs(value[0]) + 4), gamma=10 ** (-7.5 * abs(value[1]) + 2.5),
-                kernel=kernel[round(abs(value[2] * 4)) % 3])
+                kernel=kernel[round(abs(value[2] * 3)) % 3])
     scores = cross_val_score(model, x_train, y_train, cv=3, n_jobs=1)
     # print(value)
     return scores.mean(),  # Add a comma even if there is only one return value
@@ -29,7 +29,7 @@ def evalOneMax(value):
 
 def score(value):
     model = SVC(C=10 ** (-4 * abs(value[0]) + 4), gamma=10 ** (-7.5 * abs(value[1]) + 2.5),
-                kernel=kernel[round(abs(value[2] * 4)) % 3])
+                kernel=kernel[round(abs(value[2] * 3)) % 3])
     model.fit(x_train, y_train)
     return model.score(x_test, y_test)
 
@@ -56,7 +56,7 @@ def main(ngen):
     # random.seed(64)
 
     logbook = tools.Logbook()
-    logbook.header = "gen", "fitness", 'C', 'kernel', 'gamma', "score"
+    logbook.header = "gen", "fitness", 'C', 'kernel', 'gamma'
 
     # interval = (-3,7)
     start = time()
@@ -82,7 +82,7 @@ def main(ngen):
             sigma = sigma * alpha ** (-0.25)
     logbook.record(gen=g, fitness=best.fitness.values[0], C=10 ** (-4 * abs(best[0]) + 4),
                    gamma=10 ** (-7.5 * abs(best[1]) + 2.5),
-                   kernel=kernel[round(abs(best[2] * 4)) % 3], score=evalOneMax(best)[0])
+                   kernel=kernel[round(abs(best[2] * 4)) % 3])
     print(logbook.stream)
     if best_score < best.fitness.values[0]:
         best_score = best.fitness.values[0]

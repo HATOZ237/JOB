@@ -37,7 +37,7 @@ for i, dataset in enumerate(datasets):
     target_names[i] = dataset.target_names
 
 n_iter = 0
-func_seq = [lambda: random.random(), lambda: random.random(), lambda: random.random()]
+func_seq = [lambda: random(), lambda: random(), lambda: random()]
 
 x_train, x_test, y_train, y_test = [0] * 4
 
@@ -77,11 +77,11 @@ def score(value):
 
 
 # calcul des performances
-def main():
+def main(id):
     cma_results = {}
     best_score = [0]*4
     times = [0]*4
-    for k in range(80):
+    for k in range(10):
         for i in range(len(datasets)):
             global x_train, x_test, y_train, y_test
             x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
@@ -92,20 +92,20 @@ def main():
             # pop = toolbox.population(n=10*N)
             # print(pop)
             # hof1 = tools.HallOfFame(50)
-            hof2 = tools.HallOfFame(10)
+            hof2 = tools.HallOfFame(2)
             stats = tools.Statistics(lambda ind: ind.fitness.values)
             stats.register("avg", np.mean)
             stats.register("std", np.std)
             stats.register("min", np.min)
             stats.register("max", np.max)
 
-            CXPB, MUTPB, NGEN, turn = 0.3, 0.2, 50, 5
+            CXPB, MUTPB, NGEN, turn = 0.3, 0.2, 50, 4
             train_liste = [0 for _ in range(turn)]
             test_liste = [0 for _ in range(turn)]
             time_liste = [0 for _ in range(turn)]
-            print("------------------- Data : " + names[i] + " ------------------------")
+
             best2 = 0
-            strategy = cma.Strategy(centroid=[ random(), random(), random()], sigma=0.3, lambda_=5)
+            strategy = cma.Strategy(centroid=[ random(), random(), random()], sigma=0.3, lambda_=4)
             toolbox.register("generate", strategy.generate, creator.Individual)
             toolbox.register("update", strategy.update)
 
@@ -119,14 +119,20 @@ def main():
             train_liste = list(map(f, scores))
             if best_score[i] < max(train_liste):
                 best_score[i] = max(train_liste)
-            cma_results[names[i]] = {"kernel": kernel[round(best2[2] % 3)], "C": 10 ** (-4 * best2[0] + 4),
+            cma_results[names[i]] = {"kernel": kernel[round(abs(best2[2] * 4)) % 3], "C": 10 ** (-4 * best2[0] + 4),
                                      'gamma': 10 ** (-7.5 * abs(best2[1]) + 2.5),
                                      "max_train_score": best_score[i], 'test_score': score(best2),
                                      "train_score": np.mean(train_liste), "std_train": np.std(train_liste),
                                      "Time": times[i]}
-
-        pd.DataFrame(cma_results).to_csv(f"CMAS-SVC-{str((k + 1) * 50)}")
+            tab[names[i]][k, id] = best_score[i]
+        pd.DataFrame(cma_results).to_csv(f"CMAS-SVC-{str((k + 1) * 20)}")
 
 
 if __name__ == "__main__":
-    main()
+    tab = {}
+    for i in range(len(names)):
+        tab[names[i]] = np.array([0 for _ in range(10)] for k in range(10))
+    for id in range(11):
+        print("------------------- Tour  : " + str(id) + " ------------------------")
+        main(id)
+    pd.DataFrame(tab).to_pickle("CMA-TAB-SVC")
