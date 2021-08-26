@@ -126,7 +126,7 @@ def main(idi):
             time_liste = [0 for _ in range(turn)]
 
             best2 = 0
-            strategy = cma.Strategy(centroid=[random(), random(), random()], sigma=0.3, lambda_=4)
+            strategy = cma.Strategy(centroid=[random(), random(), random(), random()], sigma=0.3, lambda_=4)
             toolbox.register("generate", strategy.generate, creator.Individual)
             toolbox.register("update", strategy.update)
 
