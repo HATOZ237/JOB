@@ -125,6 +125,7 @@ def main(id):
                                      "max_train_score": best_score[i], 'test_score': score(best2),
                                      "train_score": np.mean(train_liste), "std_train": np.std(train_liste),
                                      "Time": times[i]}
+            global tab
             tab[names[i]][k, id] = best_score[i]
         pd.DataFrame(cma_results).to_csv(f"CMAS-SVC-{str((k + 1) * 20)}")
 
