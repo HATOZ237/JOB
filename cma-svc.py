@@ -103,7 +103,7 @@ def main(idi):
             stats.register("min", np.min)
             stats.register("max", np.max)
 
-            CXPB, MUTPB, NGEN, turn = 0.3, 0.2, 2, 4
+            CXPB, MUTPB, NGEN, turn = 0.3, 0.2, 50, 4
             train_liste = [0 for _ in range(turn)]
             test_liste = [0 for _ in range(turn)]
             time_liste = [0 for _ in range(turn)]
@@ -135,7 +135,7 @@ def main(idi):
 
 
 if __name__ == "__main__":
-    for id in range(5):
+    for id in range(10):
         print("------------------- Tour  : " + str(id) + " ------------------------")
         main(id)
     file_name = "CMA-TAB-SVC"
