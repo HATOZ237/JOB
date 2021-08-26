@@ -135,7 +135,7 @@ def main(idi):
 
 
 if __name__ == "__main__":
-    for id in range(1):
+    for id in range(5):
         print("------------------- Tour  : " + str(id) + " ------------------------")
         main(id)
     file_name = "CMA-TAB-SVC"
