@@ -81,7 +81,11 @@ def score(value):
     model.fit(x_train, y_train)
     return model.score(x_test, y_test)
 
+tab = {}
+for i in range(len(names)):
+    tab[names[i]] = [[0 for _ in range(10)] for k in range(10)]
 
+f = lambda x: x[0]
 # calcul des performances
 def main(idi):
     cma_results = {}
