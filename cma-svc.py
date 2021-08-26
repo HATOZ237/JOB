@@ -115,7 +115,7 @@ def main(id):
 
             # print("--------turn : "+ str(k+1)+"---------")
             start = time()
-            pops = algorithms.eaGenerateUpdate(toolbox, ngen=NGEN, stats=stats, halloffame=hof2, verbose=True)
+            pops = algorithms.eaGenerateUpdate(toolbox, ngen=NGEN, stats=stats, halloffame=hof2, verbose=False)
             times[i] = times[i] + time() - start
             best2 = hof2[0]
             pops = hof2
@@ -129,6 +129,7 @@ def main(id):
                                      "train_score": np.mean(train_liste), "std_train": np.std(train_liste),
                                      "Time": times[i]}
             global tab
+            print(best_score[i])
             tab[names[i]][k, id] = best_score[i]
         pd.DataFrame(cma_results).to_csv(f"CMAS-SVC-{str((k + 1) * 20)}")
 
