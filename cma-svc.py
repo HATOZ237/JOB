@@ -132,6 +132,7 @@ if __name__ == "__main__":
     tab = {}
     for i in range(len(names)):
         tab[names[i]] = np.array([0 for _ in range(10)] for k in range(10))
+        print(tab[names[i]])
     for id in range(11):
         print("------------------- Tour  : " + str(id) + " ------------------------")
         main(id)
