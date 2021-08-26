@@ -119,7 +119,7 @@ for total in x_axis:
                 rand_t.fit(x_train, y_train)
                 time_liste[e] = time() - start
                 train_liste[e] = rand_t.best_score_
-                tab[names[i]] = rand_t.cv_results_["mean_train_score"]
+                tab[names[i]] = pd.DataFrame(rand_t.cv_results_)["mean_train_score"]
                 #time_rand[names[i]] = time() - start
                 if best<rand_t.best_score_:
                     results_rand[names[i]] = rand_t.best_params_
