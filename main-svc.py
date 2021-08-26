@@ -25,8 +25,9 @@ from deap import creator
 from deap import tools
 from statistics import *
 from deap import cma
+import pickle
 
-random.seed(100000)
+seed(100000)
 
 datasets = [load_breast_cancer(), load_digits(), load_iris(), load_wine()]#, load_linnerud
 names = ['Breast_cancer', 'Opt_digits', 'Iris', "Wine"]# 'load_linnerud'
@@ -55,8 +56,10 @@ param_Grid = {"C":np.logspace(-3.5, 4, num=100), "gamma":np.logspace(-5, 2.5, nu
 #random_Grid = {"C":loguniform(1e-1, 1e3), "gamma":loguniform(1e-5, 1e0), "kernel":["rbf", "poly", "sigmoid", 'linear']}
 
 
-x_axis = [10, 50, 100, 250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2500]
-
+x_axis = [2000]
+tab = {}
+for i in range(len(names)):
+    tab[names[i]] = [0 for _ in range(10)]
 for total in x_axis:
     n_itersearch = total
     results_grid = {}
@@ -116,6 +119,7 @@ for total in x_axis:
                 rand_t.fit(x_train, y_train)
                 time_liste[e] = time() - start
                 train_liste[e] = rand_t.best_score_
+                tab[names[i]] = rand_t.cv_results_["mean_score"]
                 #time_rand[names[i]] = time() - start
                 if best<rand_t.best_score_:
                     results_rand[names[i]] = rand_t.best_params_
@@ -151,3 +155,8 @@ for total in x_axis:
 
             print(f"J'ai fini le traitement du dataset {names[i]}")
     pd.DataFrame(results_rand).to_csv(f"RANDSEARCHS-SVC-{str(total)}")
+file_name = "RAND-TAB-SVC"
+outfile = open(file_name, "wb")
+print(tab)
+pickle.dump(tab, outfile)
+outfile.close()
