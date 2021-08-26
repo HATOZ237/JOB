@@ -14,6 +14,7 @@ from sklearn.datasets import *
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
+import pickle
 
 seed(100000)
 np.random.seed(100000)
@@ -133,7 +134,10 @@ if __name__ == "__main__":
     for i in range(len(names)):
         tab[names[i]] = np.array([[0 for _ in range(10)] for k in range(10)])
         #print(tab[names[i]])
-    for id in range(5):
+    for id in range(1):
         print("------------------- Tour  : " + str(id) + " ------------------------")
         main(id)
-    pd.DataFrame(tab).to_pickle("CMA-TAB-SVC")
+    file_name = "CMA-TAB-SVC"
+    outfile = open(file_name, "wb")
+    pickle.dump(tab, outfile)
+    outfile.close()
