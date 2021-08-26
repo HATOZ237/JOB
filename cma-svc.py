@@ -111,7 +111,7 @@ def main(id):
 
             # print("--------turn : "+ str(k+1)+"---------")
             start = time()
-            pops = algorithms.eaGenerateUpdate(toolbox, ngen=NGEN, stats=stats, halloffame=hof2, verbose=False)
+            pops = algorithms.eaGenerateUpdate(toolbox, ngen=NGEN, stats=stats, halloffame=hof2, verbose=True)
             times[i] = times[i] + time() - start
             best2 = hof2[0]
             pops = hof2
@@ -133,7 +133,7 @@ if __name__ == "__main__":
     for i in range(len(names)):
         tab[names[i]] = np.array([[0 for _ in range(10)] for k in range(10)])
         #print(tab[names[i]])
-    for id in range(11):
+    for id in range(5):
         print("------------------- Tour  : " + str(id) + " ------------------------")
         main(id)
     pd.DataFrame(tab).to_pickle("CMA-TAB-SVC")
