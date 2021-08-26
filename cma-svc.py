@@ -40,7 +40,7 @@ for i, dataset in enumerate(datasets):
 n_iter = 0
 tab = {}
 for i in range(len(names)):
-    tab[names[i]] = np.array([[0 for _ in range(10)] for k in range(10)])
+    tab[names[i]] = [[0 for _ in range(10)] for k in range(10)]
 func_seq = [lambda: random(), lambda: random(), lambda: random()]
 
 x_train, x_test, y_train, y_test = [0] * 4
@@ -130,7 +130,7 @@ def main(idi):
                                      "Time": times[i]}
             global tab
             print(best_score[i])
-            tab[names[i]][k, idi] = best_score[i]
+            tab[names[i]][k][idi] = best_score[i]
         pd.DataFrame(cma_results).to_csv(f"CMAS-SVC-{str((k + 1) * 20)}")
 
 
