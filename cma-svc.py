@@ -81,7 +81,7 @@ def score(value):
 
 
 # calcul des performances
-def main(id):
+def main(idi):
     cma_results = {}
     best_score = [0] * 4
     times = [0] * 4
@@ -103,7 +103,7 @@ def main(id):
             stats.register("min", np.min)
             stats.register("max", np.max)
 
-            CXPB, MUTPB, NGEN, turn = 0.3, 0.2, 10, 4
+            CXPB, MUTPB, NGEN, turn = 0.3, 0.2, 2, 4
             train_liste = [0 for _ in range(turn)]
             test_liste = [0 for _ in range(turn)]
             time_liste = [0 for _ in range(turn)]
@@ -130,7 +130,7 @@ def main(id):
                                      "Time": times[i]}
             global tab
             print(best_score[i])
-            tab[names[i]][k, id] = best_score[i]
+            tab[names[i]][k, idi] = best_score[i]
         pd.DataFrame(cma_results).to_csv(f"CMAS-SVC-{str((k + 1) * 20)}")
 
 
@@ -140,5 +140,6 @@ if __name__ == "__main__":
         main(id)
     file_name = "CMA-TAB-SVC"
     outfile = open(file_name, "wb")
+    print(tab)
     pickle.dump(tab, outfile)
     outfile.close()
