@@ -103,7 +103,7 @@ def main(id):
             stats.register("min", np.min)
             stats.register("max", np.max)
 
-            CXPB, MUTPB, NGEN, turn = 0.3, 0.2, 50, 4
+            CXPB, MUTPB, NGEN, turn = 0.3, 0.2, 10, 4
             train_liste = [0 for _ in range(turn)]
             test_liste = [0 for _ in range(turn)]
             time_liste = [0 for _ in range(turn)]
