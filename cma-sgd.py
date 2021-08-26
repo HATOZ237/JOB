@@ -18,7 +18,7 @@ from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler
 import pickle
 
-random.seed(100000)
+seed(100000)
 np.random.seed(100000)
 datasets = [load_breast_cancer(), load_digits(), load_iris(), load_wine()]  # , load_linnerud
 names = ['load_breast_cancer', 'load_digits', 'load_iris', "load_wine"]  # 'load_linnerud'
@@ -41,7 +41,7 @@ for i, dataset in enumerate(datasets):
 
 np.random.seed(1000)
 n_iter = 0
-func_seq = [lambda: random.random(), lambda: random.random(), lambda: random.random(), lambda: random.random()]
+func_seq = [lambda: random(), lambda: random(), lambda: random(), lambda: random()]
 loss = ['hinge', 'log', 'perceptron', 'modified_huber', "squared_hinge"]
 learning_rate = ["constant", 'optimal', 'adaptive', 'invscaling']
 model = 0
