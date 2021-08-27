@@ -67,7 +67,7 @@ toolbox.register("evaluate", evalOneMax)
 
 
 
-def main(ngen, id):
+def main(ngen):
     IND_SIZE = 10
     start = time()
     

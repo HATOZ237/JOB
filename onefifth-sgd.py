@@ -11,6 +11,7 @@ from sklearn.datasets import *
 from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler
+import pickle
 
 kernel = ["linear", "rbf", "poly", "sigmoid"]
 
@@ -51,7 +52,7 @@ toolbox.register("evaluate", evalOneMax)
 # IND_SIZE = 10
 
 
-def main(ngen, id):
+def main(ngen):
     loss = ['hinge', 'log', 'perceptron', 'modified_huber', "squared_hinge"]
     learning_rate = ["constant", 'optimal', 'adaptive', 'invscaling']
     IND_SIZE = 10
