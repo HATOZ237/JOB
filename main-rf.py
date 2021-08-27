@@ -56,108 +56,55 @@ param_Grid = {"max_features":np.linspace(0.001,0.999, num=10), "max_samples":np.
 #random_Grid = {"C":loguniform(1e-1, 1e3), "gamma":loguniform(1e-5, 1e0), "kernel":["rbf", "poly", "sigmoid", 'linear']}
 
 
+
 x_axis = [2000]
 tab = {}
+model = RandomForestClassifier(n_jobs=-1)
 for i in range(len(names)):
-    tab[names[i]] = [0 for _ in range(10)]
-for total in x_axis:
-    n_itersearch = total
-    results_grid = {}
-    results_rand = {}
-
+    tab[names[i]] = [[0 for _ in range(10)] for k in range(10)]
+for id in range(10):
+    n_itersearch = 200
+    """results_rand = {}
     rand_test_score = {}
-    grid_test_score = {}
-
     rand_train_score = {}
-    grid_train_score = {}
-
     grid_score = {}
     rand_score = {}
-
-    grid_dict = {}
     rand_dict = {}
-
-    time_rand = {}
-    time_grid = {}
-    #time_auto = {}
-    #auto_stats = {}
+    time_rand = {}"""
 
     trainrate = 0.75
     num = 10
-    tests = {}
     turn = 10
-
-    for i, (name, data) in enumerate(zip(names, datasets)):
-        model =  RandomForestClassifier(n_jobs = -1)
-        #automl = autosklearn.classification.AutoSklearnClassifier(time_left_for_this_task=30)
-        # preprocessing 
-        if(not(target_names[i] is None)):
+    best_score = [0]*4
+    best_param = [0]*4
+    for k in range(10):
+        for i, (name, data) in enumerate(zip(names, datasets)):
+            # preprocessing
             print(f"J'ai commencé le traitement du dataset {names[i]}")
             pre_process = StandardScaler()
-            x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i],shuffle=False, train_size= trainrate)
+            x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False,
+                                                                train_size=trainrate)
             x_train, x_test = pre_process.fit_transform(x_train), pre_process.fit_transform(x_test)
-            #creation des grilles de recherches structurées et aleatoires 
-            #grid_t = GridSearchCV(model, param_grid=param_Grid, cv=4, n_jobs=-1, verbose=4)
-            rand_t = RandomizedSearchCV(model, param_distributions= param_Grid, n_iter=n_itersearch, cv=3, n_jobs=-1, verbose=3)
-            #tests[names[i]] = [x_train, x_test, y_train, y_test]
+            # creation des grilles de recherches structurées et aleatoires
+            # grid_t = GridSearchCV(model, param_grid=param_Grid, cv=4, n_jobs=-1, verbose=4)
+            rand_t = RandomizedSearchCV(model, param_distributions=param_Grid, n_iter=n_itersearch, cv=3, n_jobs=-1,
+                                        verbose=3)
+            # tests[names[i]] = [x_train, x_test, y_train, y_test]
 
-            train_liste = [0 for _ in range(turn)]
-            test_liste = [0 for _ in range(turn)]
-            time_liste = [0 for _ in range(turn)]
-            best = 0
-            for e in range(turn):
-
-                #entrainement et mesure du temps pour le grid_search
-                """start = time()
-                grid_t.fit(x_train, y_train)
-                time_grid[names[i]] = time() - start
-                results_grid[names[i]] = grid_t.best_params_"""
+            # entrainement et mesure du temps pour le random_search
+            start = time()
+            rand_t.fit(x_train, y_train)
+            if best_score[i] < rand_t.best_score_:
+                best_score[i] = rand_t.best_score_
+            tab[names[i]][k][id] = best_score[i]
 
 
-                #entrainement et mesure du temps pour le random_search
-                start = time()
-                rand_t.fit(x_train, y_train)
-                time_liste[e] = time() - start
-                train_liste[e] = rand_t.best_score_
-                tab[names[i]][e] = rand_t.cv_results_
-                #time_rand[names[i]] = time() - start
-                if best<rand_t.best_score_:
-                    results_rand[names[i]] = rand_t.best_params_
-                    best = rand_t.best_score_
 
 
-                #gridsearch
-                #grid_dict[names[i]] = grid_t.cv_results_
-
-                #randomsearch
-                #rand_dict[names[i]] = rand_t.cv_results_
-
-                #scoring grid 
-                """model.set_params(**grid_t.best_params_)
-                model.fit(x_train, y_train)
-                results_grid[names[i]]['Test score'] = model.score(x_test, y_test)
-                results_grid[names[i]]["Score optimisation"] =  grid_t.best_score_
-                results_grid[names[i]]["Temps d'execution(s)"] = time()-start"""
-
-                #scoring rand
-                model.set_params(**rand_t.best_params_)
-                model.fit(x_train, y_train)
-                test_liste[e] = model.score(x_test, y_test) 
-            results_rand[names[i]]['max_test_score'] = np.max(test_liste)
-            results_rand[names[i]]['max_train_score'] = np.max(train_liste)
-            results_rand[names[i]]['test_score'] = np.mean(test_liste)
-            results_rand[names[i]]['std_test'] = np.std(test_liste)
-            results_rand[names[i]]['train_score'] = np.mean(train_liste)
-            results_rand[names[i]]['std_train'] = np.std(train_liste)
-            results_rand[names[i]]["time"] = np.mean(time_liste)
-            #results_rand[names[i]]["std_time"] = np.std(time_liste)
-
-
-            print(f"J'ai fini le traitement du dataset {names[i]}")
-    pd.DataFrame(results_rand).to_csv(f"RANDSEARCH-RF-{str(total)}")
-
-file_name = "RAND-TAB-RF"
+# pd.DataFrame(results_rand).to_csv(f"RANDSEARCH-SVC-{str(total)}")
+file_name = "RAN-TAB-RF"
 outfile = open(file_name, "wb")
 print(tab)
 pickle.dump(tab, outfile)
 outfile.close()
+
