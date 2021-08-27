@@ -66,7 +66,7 @@ f = lambda x: x[0]
 def evalOneMax(value):
     # print(value)
     # lock = value[1]
-    model = SVC(C=10 ** (-8 * abs(value[0]) + 4), gamma=10 ** (-7.5 * abs(value[1]) + 2.5),
+    model = SVC(C=10 ** (-7.5 * abs(value[0]) + 4), gamma=10 ** (-7.5 * abs(value[1]) + 2.5),
                 kernel=kernel[round(abs(value[2] * 4)) % 3])
     scores = cross_val_score(model, x_train, y_train, cv=3, n_jobs=1)
     # print(value)
@@ -74,7 +74,7 @@ def evalOneMax(value):
 
 
 def score(value):
-    model = SVC(C=10 ** (-8 * abs(value[0]) + 4), gamma=10 ** (-7.5 * abs(value[1]) + 2.5),
+    model = SVC(C=10 ** (-7.5 * abs(value[0]) + 4), gamma=10 ** (-7.5 * abs(value[1]) + 2.5),
                 kernel=kernel[round(abs(value[2] * 4)) % 3])
     model.fit(x_train, y_train)
     return model.score(x_test, y_test)
