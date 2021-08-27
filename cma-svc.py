@@ -57,7 +57,7 @@ toolbox.register("individual", tools.initCycle, creator.Individual,
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
 toolbox.register("mate", tools.cxTwoPoint)
-toolbox.register("mutate", tools.mutFlipBit, indpb=0.25)
+toolbox.register("mutate", tools.mutGaussian,mu = 0, sigma =0.3, indpb=0.1)
 toolbox.register("select", tools.selBest)
 
 f = lambda x: x[0]
@@ -66,7 +66,7 @@ f = lambda x: x[0]
 def evalOneMax(value):
     # print(value)
     # lock = value[1]
-    model = SVC(C=10 ** (-7.5 * abs(value[0]) + 4), gamma=10 ** (-7.5 * abs(value[1]) + 2.5),
+    model = SVC(C=10 ** (4 * abs(value[0]) - 3.5), gamma=10 ** (2.5 * abs(value[1]) - 5),
                 kernel=kernel[round(abs(value[2] * 4)) % 3])
     scores = cross_val_score(model, x_train, y_train, cv=3, n_jobs=1)
     # print(value)
