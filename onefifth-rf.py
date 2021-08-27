@@ -41,12 +41,12 @@ kernel = ["linear", "rbf", "poly","sigmoid"]
 def evalOneMax(value):
     if abs(value[2])>6:
         value[2] = 6
-    model = RandomForestClassifier(n_estimators=round(abs(value[2])*15)+1,max_features=abs(value[0])%1, max_samples=abs(value[1])%1, n_jobs=1)
-    scores = cross_val_score(model, x_train, y_train, cv = 3, n_jobs=1)
+    model = RandomForestClassifier(n_estimators=round(abs(value[2])*15)+1,max_features=abs(value[0])%1, max_samples=abs(value[1])%1, n_jobs=-1)
+    scores = cross_val_score(model, x_train, y_train, cv = 3, n_jobs=-1)
     return scores.mean(), #Add a comma even if there is only one return value
 
 def score(value):
-    model = RandomForestClassifier(n_estimators=round(abs(value[2])*15)+1,max_features=abs(value[0])%1, max_samples=abs(value[1])%1, n_jobs=1)
+    model = RandomForestClassifier(n_estimators=round(abs(value[2])*15)+1,max_features=abs(value[0])%1, max_samples=abs(value[1])%1, n_jobs=-1)
     model.fit(x_train, y_train)
     return model.score(x_test, y_test)
 
