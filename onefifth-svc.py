@@ -14,6 +14,7 @@ from sklearn.datasets import *
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
+import pickle
 kernel = ["rbf", "poly", "sigmoid", 'linear']
 
 
@@ -45,6 +46,7 @@ creator.create("Individual", list, fitness=creator.FitnessMin)
 toolbox = base.Toolbox()
 toolbox.register("update", update)
 toolbox.register("evaluate", evalOneMax)
+
 
 
 # IND_SIZE = 10
@@ -104,6 +106,9 @@ if __name__ == "__main__":
     target_names = [None for i in range(len(datasets))]
     feature_names = [None for i in range(len(datasets))]
     description = [None for i in range(len(datasets))]
+    tab = {}
+    for i in range(len(names)):
+        tab[names[i]] = [[0 for _ in range(10)] for k in range(10)]
     for i, dataset in enumerate(datasets):
         data_s[i] = dataset.data
         target_s[i] = dataset.target
@@ -122,20 +127,27 @@ if __name__ == "__main__":
     best_score = [0] * 4
     best2 = [0] * 4
     process = [0 for _ in range(turn)]
-    for total in range(80):
-        print(f"{total + 1} essais ")
-        for i in range(len(datasets)):
-            x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
-            x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
-            best, time1 = main(250)
-            train_score = evalOneMax(best)[0]
-            if best_score[i] < train_score:
-                best_score[i] = train_score
-                best2[i] = best
-            start[i] = start[i] + time1
-            one_results[names[i]] = {"kernel": kernel[round(best2[i][2] % 3)], "C": 10 ** (-4 * best2[i][0] + 4),
-                                     'gamma': 10 ** (-7.5 * abs(best2[i][1]) + 2.5),
-                                     "test_score": score(best2[i]),
-                                     "train_score": best_score[i],
-                                     "Time": start[i]}
-        pd.DataFrame(one_results).to_csv(f"ONEFIFTH-SVC-{(total + 1) * 25}")
+    for k in range(10):
+        for total in range(10):
+            print(f"{total + 1} essais ")
+            for i in range(len(datasets)):
+                x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
+                x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
+                best, time1 = main(200)
+                train_score = evalOneMax(best)[0]
+                if best_score[i] < train_score:
+                    best_score[i] = train_score
+                    best2[i] = best
+                #start[i] = start[i] + time1
+                tab[names[i]][total][k] = best_score[i]
+                """one_results[names[i]] = {"kernel": kernel[round(best2[i][2] % 3)], "C": 10 ** (-4 * best2[i][0] + 4),
+                                         'gamma': 10 ** (-7.5 * abs(best2[i][1]) + 2.5),
+                                         "test_score": score(best2[i]),
+                                         "train_score": best_score[i],
+                                         "Time": start[i]}
+            pd.DataFrame(one_results).to_csv(f"ONEFIFTH-SVC-{(total + 1) * 25}")"""
+    file_name = "ONE-TAB-SVC"
+    outfile = open(file_name, "wb")
+    print(tab)
+    pickle.dump(tab, outfile)
+    outfile.close()
