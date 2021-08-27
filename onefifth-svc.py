@@ -24,7 +24,7 @@ def evalOneMax(value):
     # print(value)
     model = SVC(C=10 ** (-8 * abs(value[0]) + 4), gamma=10 ** (-8 * abs(value[1]) + 3),
                 kernel=kernel[round(abs(value[2] * 3)) % 3])
-    scores = cross_val_score(model, x_train, y_train, cv=3, n_jobs=1)
+    scores = cross_val_score(model, x_train, y_train, cv=3, n_jobs=-1)
     # print(value)
     return scores.mean(),  # Add a comma even if there is only one return value
 
