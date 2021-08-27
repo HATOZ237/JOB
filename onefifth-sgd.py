@@ -64,7 +64,7 @@ def main(ngen):
     logbook.header = "gen", "fitness", 'loss', 'alpha', 'l1_ratio', "learning_rate"
 
     # interval = (-3,7)
-    func = [random.random(), random.random(), random.random(), random.gauss(0, 0.5)]
+    func = [random(), random(), random(), gauss(0, 0.5)]
     mu = func
     sigma = 0.5
     alpha = 2.0 ** (1.0 / IND_SIZE)
