@@ -27,7 +27,7 @@ from statistics import *
 from deap import cma
 import pickle
 
-seed(100000)
+np.random.seed(100000)
 
 datasets = [load_breast_cancer(), load_digits(), load_iris(), load_wine()]#, load_linnerud
 names = ['Breast_cancer', 'Opt_digits', 'Iris', "Wine"]# 'load_linnerud'
@@ -41,7 +41,7 @@ for i, dataset in enumerate(datasets):
     target_s[i] = dataset.target
     pocket = list(zip(data_s[i], target_s[i]))
    # print(pocket)
-    shuffle(pocket)
+    np.random.shuffle(pocket)
     data_s[i] = [x[0] for x in pocket]
     target_s[i] = [x[1] for x in pocket]
     feature_names[i] = dataset.feature_names
@@ -49,7 +49,7 @@ for i, dataset in enumerate(datasets):
     target_names[i] = dataset.target_names
 
 
-param_Grid = {"max_features":np.linspace(0.001,0.999, num=10), "max_samples":np.linspace(0.001,0.999, num=10), "n_estimators":np.arange(1, 100)}
+param_Grid = {"max_features":np.linspace(0.001,0.999, num=100), "max_samples":np.linspace(0.001,0.999, num=100), "n_estimators":np.arange(1, 100)}
 #param_Grid = {"n_neighbors":np.arange(1,40, 1), "p":np.arange(1,5), "leaf_size":np.arange(1, 31, 1)}
 #param_Grid = {"learning_rate":["optimal", 'invscaling', "adaptive", 'constant'], "l1_ratio":np.linspace(0,1, num = 11), "alpha":np.logspace(-4,-1,num = 40), "loss":["hinge", 'log', 'perceptron', "modified_huber","squared_hinge"]}
 #param_Grid = {"C":np.logspace(-3.5, 4, num=100), "gamma":np.logspace(-5, 2.5, num = 100), "kernel":["rbf", "poly", "sigmoid", "linear"]}
@@ -63,6 +63,7 @@ model = RandomForestClassifier(n_jobs=-1)
 for i in range(len(names)):
     tab[names[i]] = [[0 for _ in range(10)] for k in range(10)]
 for id in range(10):
+    np.random.seed(randint(1, 100000))
     n_itersearch = 200
     """results_rand = {}
     rand_test_score = {}
@@ -83,7 +84,7 @@ for id in range(10):
             print(f"J'ai commencé le traitement du dataset {names[i]}")
             pre_process = StandardScaler()
             x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False,
-                                                                train_size=trainrate)
+                                                                train_size=trainrate, random_state=0)
             x_train, x_test = pre_process.fit_transform(x_train), pre_process.fit_transform(x_test)
             # creation des grilles de recherches structurées et aleatoires
             # grid_t = GridSearchCV(model, param_grid=param_Grid, cv=4, n_jobs=-1, verbose=4)
