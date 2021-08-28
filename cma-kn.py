@@ -1,36 +1,22 @@
-import sklearn
+from random import *
+import numpy as np
+import multiprocessing
 import random
 from random import *
-from matplotlib import  pyplot as plt
-import numpy as np
-from sklearn.linear_model import LinearRegression
-from sklearn.svm import SVR, SVC, LinearSVC
-from sklearn.neighbors import KNeighborsClassifier
-from numpy.linalg import *
-from sklearn.datasets import *
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split, validation_curve, cross_val_score, StratifiedKFold, KFold
-from sklearn.preprocessing import StandardScaler, RobustScaler
-from sklearn.pipeline import make_pipeline
-import seaborn as sns
-import pandas as pd
 from time import time
-import scipy.stats as stats
-from sklearn.utils.fixes import loguniform
-from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
-from sklearn.linear_model import SGDClassifier
-import random
+
+import numpy as np
+import pandas as pd
 from deap import algorithms
 from deap import base
+from deap import cma
 from deap import creator
 from deap import tools
-from statistics import *
-from deap import cma
-from scoop import futures
-from multiprocessing import Process
-import multiprocessing
+from sklearn.datasets import *
+from sklearn.linear_model import SGDClassifier
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.preprocessing import StandardScaler
 import pickle
-
 
 np.random.seed(100000)
 datasets = [load_breast_cancer(), load_digits(), load_iris(), load_wine()]#, load_linnerud
