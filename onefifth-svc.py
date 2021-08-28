@@ -22,6 +22,10 @@ kernel = ["rbf", "poly", "sigmoid", 'linear']
 def evalOneMax(value):
     # lock = value[1]
     # print(value)
+    if abs(value[0]) > 2:
+        value[0] = random()
+    if abs(value[1]) > 2:
+        value[1] = random()
     model = SVC(C=10 ** (-8 * abs(value[0]) + 4), gamma=10 ** (-7.5 * abs(value[1]) + 2.5),
                 kernel=kernel[round(abs(value[2] * 3)) % 3])
     scores = cross_val_score(model, x_train, y_train, cv=3, n_jobs=-1)
