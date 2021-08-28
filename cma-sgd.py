@@ -138,6 +138,7 @@ def main(idi):
             pops = hof2
             scores = toolbox.map(toolbox.evaluate, hof2)
             train_liste = list(map(f, scores))
+            print(train_liste)
             if best_score[i] < max(train_liste):
                 best_score[i] = max(train_liste)
             cma_results[names[i]] = {'loss': loss[round(abs(best2[0] * 4)) % 4],
