@@ -32,7 +32,7 @@ for i, dataset in enumerate(datasets):
 
 # param_Grid = {"max_features":np.linspace(0.001,0.999, num=10), "max_samples":np.linspace(0.001,0.999, num=10), "n_estimators":np.arange(1, 100, 10)}
 # param_Grid = {"n_neighbors":np.arange(1,40, 1), "p":np.arange(1,5), "leaf_size":np.arange(1, 31, 1)}
-param_Grid = {"learning_rate": ["optimal", 'invscaling', "adaptive", 'constant'], "l1_ratio": np.linspace(0, 1, num=20),
+param_Grid = {"learning_rate": ["optimal", 'invscaling', "adaptive", 'constant'], "l1_ratio": np.linspace(0, 1, num=100),
               "alpha": np.logspace(-4, -1, num=100),
               "loss": ["hinge", 'log', 'perceptron', "modified_huber", "squared_hinge"]}
 # param_Grid = {"C":np.logspace(-3.5, 4, num=25), "gamma":np.logspace(-5, 2.5, num = 25), "kernel":["rbf", "poly", "sigmoid", "linear"]}

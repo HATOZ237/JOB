@@ -64,7 +64,7 @@ toolbox.register("select", tools.selBest)
 # toolbox.register("map", pool.map)
 
 def evalOneMax(value):
-    print(value)
+    #print(value)
     loss = ['hinge', 'log', 'perceptron', 'modified_huber', "squared_hinge"]
     learning_rate = ["constant", 'optimal', 'adaptive', 'invscaling']
     model = SGDClassifier(n_jobs=-1, eta0=0.00001, loss=loss[round(abs(value[0] * 6)) % 4],
@@ -132,7 +132,7 @@ def main(idi):
 
             # print("--------turn : "+ str(k+1)+"---------")
             start = time()
-            pops = algorithms.eaGenerateUpdate(toolbox, ngen=NGEN, stats=stats, halloffame=hof2, verbose=False)
+            pops = algorithms.eaGenerateUpdate(toolbox, ngen=NGEN, stats=stats, halloffame=hof2, verbose=True)
             times[i] = times[i] + time() - start
             best2 = hof2[0]
             pops = hof2
