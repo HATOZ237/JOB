@@ -28,6 +28,7 @@ from deap import cma
 from scoop import futures
 from multiprocessing import Process
 import multiprocessing
+import pickle
 
 random.seed(100000)
 np.random.seed(100000)
@@ -73,68 +74,89 @@ toolbox.register("select", tools.selBest)
 
 def evalOneMax(value):
     #print("ICI")
-    model = KNeighborsClassifier(n_neighbors=round(abs(value[0])*20)+1, p=round(abs(value[1])*5)+1, leaf_size=round(abs(value[2]*15))+1, n_jobs=-1)
+    if value[0]>1:
+        value[0] = random()
+    if value[2]>1:
+        value[2] = random()
+    model = KNeighborsClassifier(n_neighbors=round(abs(value[0])*40)+1, p=round(abs(value[1])*5)+1, leaf_size=round(abs(value[2]*30))+1, n_jobs=-1)
     scores = cross_val_score(model, x_train, y_train, cv = 3, n_jobs=--1)
     return scores.mean(), #Add a comma even if there is only one return value
 
 def score(value):
-    model = KNeighborsClassifier(n_neighbors=round(abs(value[0])*20)+1, p=round(abs(value[1])*5)+1, leaf_size=round(abs(value[2])*15)+1, n_jobs=-1)
+    if value[0]>1:
+        value[0] = random()
+    if value[2]>1:
+        value[2] = random()
+    model = KNeighborsClassifier(n_neighbors=round(abs(value[0])*40)+1, p=round(abs(value[1])*5)+1, leaf_size=round(abs(value[2])*30)+1, n_jobs=-1)
     model.fit(x_train, y_train)
     return model.score(x_test, y_test)
 
-#calcul des performances
-def main():
-    for total in [200]:
-        ea_results = {}
-        cma_results = {}
+tab = {}
+for i in range(len(names)):
+    tab[names[i]] = [[0 for _ in range(10)] for k in range(10)]
 
+f = lambda x: x[0]
+# calcul des performances
+def main(idi):
+    cma_results = {}
+    best_score = [0] * 4
+    times = [0] * 4
+    for k in range(10):
         for i in range(len(datasets)):
-            n_iter = 0
             global x_train, x_test, y_train, y_test
-            x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
+            x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75, random_state=0)
             x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
             toolbox.register("evaluate", evalOneMax)
             #pool = multiprocessing.Pool()
             #toolbox.register("map", pool.map)
-            #pop = toolbox.population(n=10*N)
-            #print(pop)
-            hof1 = tools.HallOfFame(50)
+            # pop = toolbox.population(n=10*N)
+            # print(pop)
+            # hof1 = tools.HallOfFame(50)
             hof2 = tools.HallOfFame(50)
             stats = tools.Statistics(lambda ind: ind.fitness.values)
             stats.register("avg", np.mean)
             stats.register("std", np.std)
-            #stats.register("min", np.min)
-            #stats.register("max", np.max)
+            stats.register("min", np.min)
+            stats.register("max", np.max)
 
-            CXPB, MUTPB, NGEN, turn = 0.3, 0.2, total, 10
-            start = time()
+            CXPB, MUTPB, NGEN, turn = 0.3, 0.2, 50, 4
             train_liste = [0 for _ in range(turn)]
             test_liste = [0 for _ in range(turn)]
             time_liste = [0 for _ in range(turn)]
-            print("------------------- Data : "+names[i]+" ------------------------") 
-            best2 = 0
-            best_score = 0
-            for k in range(turn):
-                strategy = cma.Strategy(centroid=[0,0,0], sigma=0.5, lambda_ = 10)
-                toolbox.register("generate", strategy.generate, creator.Individual)
-                toolbox.register("update", strategy.update)
-                print("--------turn : "+ str(k+1)+"---------")
-                start = time()
-                pops = algorithms.eaGenerateUpdate(toolbox, ngen=NGEN, stats=stats, halloffame=hof2, verbose = False)
-                #print(len(pops[0]))
-                time_liste[k] = time()-start
-                pops = pops[0]
-                best = pops[np.argmax([toolbox.evaluate(x) for x in pops])]
-                score_tmp = evalOneMax(best)[0]
-                if best_score < score_tmp:
-                    best2 = best
-                    best_score = score_tmp
-                train_liste[k] = best_score
-                test_liste[k] = score(best2) 
-            cma_results[names[i]] = {'n_neighbors':round(abs(best2[0])*30)+1, "p":round(abs(best2[1])*5)+1, 'leaf_size':round(abs(best2[2])*15)+1,"max_test_score":max(test_liste), "max_train_score":max(train_liste), 'test_score': np.mean(test_liste),'std_test': np.std(test_liste),
-                                     "train_score": np.mean(train_liste), "std_train":np.std(train_liste),"Time":np.mean(time_liste)}
-        pd.DataFrame(cma_results).to_csv(f"CMA-KN-{str(total*10)}")
 
-        
+            best2 = 0
+            strategy = cma.Strategy(centroid=[random(), random(), random()], sigma=0.3, lambda_=4)
+            toolbox.register("generate", strategy.generate, creator.Individual)
+            toolbox.register("update", strategy.update)
+
+            # print("--------turn : "+ str(k+1)+"---------")
+            start = time()
+            pops = algorithms.eaGenerateUpdate(toolbox, ngen=NGEN, stats=stats, halloffame=hof2, verbose=True)
+            times[i] = times[i] + time() - start
+            best2 = hof2[0]
+            pops = hof2
+            scores = toolbox.map(toolbox.evaluate, hof2)
+            train_liste = list(map(f, scores))
+            print(train_liste)
+            if best_score[i] < max(train_liste):
+                best_score[i] = max(train_liste)
+            cma_results[names[i]] = {
+                                     "max_train_score": best_score[i], 'test_score': score(best2),
+                                     "train_score": np.mean(train_liste), "std_train": np.std(train_liste),
+                                     "Time": times[i]}
+            global tab
+            print(best_score[i])
+            tab[names[i]][k][idi] = best_score[i]
+        pd.DataFrame(cma_results).to_csv(f"CMAS-SGD-{str((k + 1) * 20)}")
+
+
 if __name__ == "__main__":
-    main()
+    for id in range(10):
+        print("------------------- Tour  : " + str(id) + " ------------------------")
+        np.random.seed(randint(1, 100000))
+        main(id)
+    file_name = "CMA-TAB-KN"
+    outfile = open(file_name, "wb")
+    print(tab)
+    pickle.dump(tab, outfile)
+    outfile.close()
