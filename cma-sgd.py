@@ -155,6 +155,7 @@ def main(idi):
 if __name__ == "__main__":
     for id in range(10):
         print("------------------- Tour  : " + str(id) + " ------------------------")
+        seed(randint(1, 100000))
         main(id)
     file_name = "CMA-TAB-SGD"
     outfile = open(file_name, "wb")

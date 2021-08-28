@@ -66,7 +66,7 @@ f = lambda x: x[0]
 def evalOneMax(value):
     # print(value)
     # lock = value[1]
-    model = SVC(C=10 ** (4 * abs(value[0]) - 3.5), gamma=10 ** (2.51 * abs(value[1]) - 5),
+    model = SVC(C=10 ** (4 * abs(value[0]) - 3.5), gamma=10 ** (2.5 * abs(value[1]) - 5),
                 kernel=kernel[round(abs(value[2] * 3)) % 3])
     scores = cross_val_score(model, x_train, y_train, cv=3, n_jobs=1)
     # print(value)
@@ -88,7 +88,7 @@ def main(idi):
     for k in range(10):
         for i in range(len(datasets)):
             global x_train, x_test, y_train, y_test
-            x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
+            x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75, random_state=0)
             x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
             toolbox.register("evaluate", evalOneMax)
             pool = multiprocessing.Pool()
@@ -137,6 +137,7 @@ def main(idi):
 if __name__ == "__main__":
     for id in range(10):
         print("------------------- Tour  : " + str(id) + " ------------------------")
+        np.random.seed(randint(1, 100000))
         main(id)
     file_name = "CMA-TAB-SVC"
     outfile = open(file_name, "wb")
