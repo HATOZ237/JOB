@@ -89,7 +89,7 @@ def score(value):
     learning_rate = ["constant", 'optimal', 'adaptive', 'invscaling']
     model = SGDClassifier(n_jobs=-1, eta0=0.00001, loss=loss[round(abs(value[0] * 4)) % 4],
                           learning_rate=learning_rate[round(abs(value[1] * 3)) % 3], l1_ratio=abs(value[2] % 1),
-                          alpha=10 ** (-3 * value[3] - 1))
+                          alpha=10 ** (-4 * value[3]))
     model.fit(x_train, y_train)
     return model.score(x_test, y_test)
 tab = {}
@@ -113,7 +113,7 @@ def main(idi):
             # pop = toolbox.population(n=10*N)
             # print(pop)
             # hof1 = tools.HallOfFame(50)
-            hof2 = tools.HallOfFame(2)
+            hof2 = tools.HallOfFame(5)
             stats = tools.Statistics(lambda ind: ind.fitness.values)
             stats.register("avg", np.mean)
             stats.register("std", np.std)
