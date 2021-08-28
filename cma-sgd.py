@@ -113,7 +113,7 @@ def main(idi):
             # pop = toolbox.population(n=10*N)
             # print(pop)
             # hof1 = tools.HallOfFame(50)
-            hof2 = tools.HallOfFame(10)
+            hof2 = tools.HallOfFame(50)
             stats = tools.Statistics(lambda ind: ind.fitness.values)
             stats.register("avg", np.mean)
             stats.register("std", np.std)
