@@ -74,7 +74,7 @@ def evalOneMax(value):
 
 
 def score(value):
-    model = SVC(C=10 ** (-4 * abs(value[0]) - 3.5), gamma=10 ** (2.5 * abs(value[1]) - 5),
+    model = SVC(C=10 ** (4 * abs(value[0]) - 3.5), gamma=10 ** (2.5 * abs(value[1]) - 5),
                 kernel=kernel[round(abs(value[2] * 3)) % 3])
     model.fit(x_train, y_train)
     return model.score(x_test, y_test)
@@ -124,7 +124,7 @@ def main(idi):
             if best_score[i] < max(train_liste):
                 best_score[i] = max(train_liste)
             cma_results[names[i]] = {"kernel": kernel[round(abs(best2[2] * 3)) % 3], "C": 10 ** (4 * best2[0] - 3.5),
-                                     'gamma': 10 ** (2.5 * abs(best2[1]) - 7),
+                                     'gamma': 10 ** (2.5 * abs(best2[1]) - 5),
                                      "max_train_score": best_score[i], 'test_score': score(best2),
                                      "train_score": np.mean(train_liste), "std_train": np.std(train_liste),
                                      "Time": times[i]}
