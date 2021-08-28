@@ -23,7 +23,7 @@ def evalOneMax(value):
     # lock = value[1]
     # print(value)
     model = SVC(C=10 ** (-8 * abs(value[0]) + 4), gamma=10 ** (-7.5 * abs(value[1]) + 2.5),
-                kernel=kernel[round(abs(value[2] * 4)) % 3])
+                kernel=kernel[round(abs(value[2] * 3)) % 3])
     scores = cross_val_score(model, x_train, y_train, cv=3, n_jobs=-1)
     # print(value)
     return scores.mean(),  # Add a comma even if there is only one return value
@@ -31,7 +31,7 @@ def evalOneMax(value):
 
 def score(value):
     model = SVC(C=10 ** (-8 * abs(value[0]) + 4), gamma=10 ** (-7.5 * abs(value[1]) + 2.5),
-                kernel=kernel[round(abs(value[2] * 4)) % 3])
+                kernel=kernel[round(abs(value[2] * 3)) % 3])
     model.fit(x_train, y_train)
     return model.score(x_test, y_test)
 
@@ -97,7 +97,6 @@ def main(ngen):
 
 
 if __name__ == "__main__":
-    seed(100000)
     np.random.seed(100000)
     datasets = [load_breast_cancer(), load_digits(), load_iris(), load_wine()]  # , load_linnerud
     names = ['load_breast_cancer', 'load_digits', 'load_iris', "load_wine"]  # 'load_linnerud'
@@ -114,7 +113,7 @@ if __name__ == "__main__":
         target_s[i] = dataset.target
         pocket = list(zip(data_s[i], target_s[i]))
         # print(pocket)
-        shuffle(pocket)
+        np.random.shuffle(pocket)
         data_s[i] = [x[0] for x in pocket]
         target_s[i] = [x[1] for x in pocket]
         # feature_names[i] = dataset.feature_names
@@ -128,11 +127,12 @@ if __name__ == "__main__":
     best2 = [0] * 4
     process = [0 for _ in range(turn)]
     for k in range(10):
+        np.random.seed(randint(1, 100000))
         for total in range(10):
             print(f"{total + 1} essais ")
             for i in range(len(datasets)):
                 x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False,
-                                                                    train_size=0.75)
+                                                                    train_size=0.75,random_state=0)
                 x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
                 best, time1 = main(200)
                 train_score = evalOneMax(best)[0]
