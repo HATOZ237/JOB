@@ -64,7 +64,7 @@ def main(ngen):
     start = time()
     func = [random(), random(), random()]
     mu = func
-    sigma = 0.2
+    sigma = 0.3
     alpha = 2.0 ** (1.0 / IND_SIZE)
 
     best = creator.Individual(mu)
@@ -82,9 +82,9 @@ def main(ngen):
             best, worst = worst, best
         else:
             sigma = sigma * alpha ** (-0.25)
-        logbook.record(gen=g, fitness=best.fitness.values[0], C=10 ** (-4 * abs(best[0]) + 4),
+        logbook.record(gen=g, fitness=best.fitness.values[0], C=10 ** (-8 * abs(best[0]) + 4),
                    gamma=10 ** (-7.5 * abs(best[1]) + 2.5),
-                   kernel=kernel[round(abs(best[2] * 4)) % 3])
+                   kernel=kernel[round(abs(best[2] * 3)) % 3])
         print(logbook.stream)
     if best_score < best.fitness.values[0]:
         best_score = best.fitness.values[0]
