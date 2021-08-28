@@ -143,6 +143,7 @@ if __name__ == "__main__":
                     best2[i] = best
                 # start[i] = start[i] + time1
                 tab[names[i]][total][k] = best_score[i]
+                print(best_score[i])
                 """one_results[names[i]] = {"kernel": kernel[round(best2[i][2] % 3)], "C": 10 ** (-4 * best2[i][0] + 4),
                                          'gamma': 10 ** (-7.5 * abs(best2[i][1]) + 2.5),
                                          "test_score": score(best2[i]),
