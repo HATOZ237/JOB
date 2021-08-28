@@ -67,9 +67,9 @@ def evalOneMax(value):
     #print(value)
     loss = ['hinge', 'log', 'perceptron', 'modified_huber', "squared_hinge"]
     learning_rate = ["constant", 'optimal', 'adaptive', 'invscaling']
-    model = SGDClassifier(n_jobs=-1, eta0=0.00001, loss=loss[round(abs(value[0] * 6)) % 4],
-                          learning_rate=learning_rate[round(abs(value[1] * 5)) % 3], l1_ratio=abs(value[2] % 1),
-                          alpha=10 ** (-4 * value[3]))
+    model = SGDClassifier(n_jobs=-1, eta0=0.00001, loss=loss[round(abs(value[0] * 4)) % 4],
+                          learning_rate=learning_rate[round(abs(value[1] * 3)) % 3], l1_ratio=abs(value[2] % 1),
+                          alpha=10 ** (4 * value[3]- 4))
     scores = cross_val_score(model, x_train, y_train, cv=3, n_jobs=-1)
     return scores.mean(),  # Add a comma even if there is only one return value
 
@@ -79,7 +79,7 @@ def evalOne(value):
     learning_rate = ["constant", 'optimal', 'adaptive', 'invscaling']
     model = SGDClassifier(n_jobs=-1, eta0=0.00001, loss=loss[round(abs(value[0] * 4)) % 4],
                           learning_rate=learning_rate[round(abs(value[1] * 3)) % 3], l1_ratio=abs(value[2] % 1),
-                          alpha=10 ** (-4 * value[3]))
+                          alpha=10 ** (4 * value[3] - 4))
     scores = cross_val_score(model, x_train, y_train, cv=3, n_jobs=-1)
     return scores.mean(),  # Add a comma even if there is only one return value
 
@@ -89,7 +89,7 @@ def score(value):
     learning_rate = ["constant", 'optimal', 'adaptive', 'invscaling']
     model = SGDClassifier(n_jobs=-1, eta0=0.00001, loss=loss[round(abs(value[0] * 4)) % 4],
                           learning_rate=learning_rate[round(abs(value[1] * 3)) % 3], l1_ratio=abs(value[2] % 1),
-                          alpha=10 ** (-4 * value[3]))
+                          alpha=10 ** (4 * value[3] - 4))
     model.fit(x_train, y_train)
     return model.score(x_test, y_test)
 tab = {}
@@ -113,7 +113,7 @@ def main(idi):
             # pop = toolbox.population(n=10*N)
             # print(pop)
             # hof1 = tools.HallOfFame(50)
-            hof2 = tools.HallOfFame(5)
+            hof2 = tools.HallOfFame(10)
             stats = tools.Statistics(lambda ind: ind.fitness.values)
             stats.register("avg", np.mean)
             stats.register("std", np.std)
@@ -142,7 +142,7 @@ def main(idi):
                 best_score[i] = max(train_liste)
             cma_results[names[i]] = {'loss': loss[round(abs(best2[0] * 4)) % 4],
                                      "learning_rate": learning_rate[round(abs(best2[1] * 3)) % 3], 'l1_ratio': abs(best2[2] % 1),
-                                     "alpha": 10 ** (-4 * best2[3] ),
+                                     "alpha": 10 ** (4 * best2[3] - 4 ),
                                      "max_train_score": best_score[i], 'test_score': score(best2),
                                      "train_score": np.mean(train_liste), "std_train": np.std(train_liste),
                                      "Time": times[i]}
