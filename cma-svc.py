@@ -16,7 +16,7 @@ from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 
-seed(100000)
+
 np.random.seed(100000)
 datasets = [load_breast_cancer(), load_digits(), load_iris(), load_wine()]  # , load_linnerud
 names = ['load_breast_cancer', 'load_digits', 'load_iris', "load_wine"]  # 'load_linnerud'
