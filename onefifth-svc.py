@@ -82,10 +82,10 @@ def main(ngen):
             best, worst = worst, best
         else:
             sigma = sigma * alpha ** (-0.25)
-    logbook.record(gen=g, fitness=best.fitness.values[0], C=10 ** (-4 * abs(best[0]) + 4),
+        logbook.record(gen=g, fitness=best.fitness.values[0], C=10 ** (-4 * abs(best[0]) + 4),
                    gamma=10 ** (-7.5 * abs(best[1]) + 2.5),
                    kernel=kernel[round(abs(best[2] * 4)) % 3])
-    print(logbook.stream)
+        print(logbook.stream)
     if best_score < best.fitness.values[0]:
         best_score = best.fitness.values[0]
         save = best
