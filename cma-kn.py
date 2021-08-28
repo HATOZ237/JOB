@@ -1,4 +1,5 @@
 import sklearn
+import random
 from random import *
 from matplotlib import  pyplot as plt
 import numpy as np
@@ -30,7 +31,7 @@ from multiprocessing import Process
 import multiprocessing
 import pickle
 
-random.seed(100000)
+
 np.random.seed(100000)
 datasets = [load_breast_cancer(), load_digits(), load_iris(), load_wine()]#, load_linnerud
 names = ['load_breast_cancer', 'load_digits', 'load_iris', "load_wine"]# 'load_linnerud'
@@ -44,7 +45,7 @@ for i, dataset in enumerate(datasets):
     target_s[i] = dataset.target
     pocket = list(zip(data_s[i], target_s[i]))
    # print(pocket)
-    shuffle(pocket)
+    np.random.shuffle(pocket)
     data_s[i] = [x[0] for x in pocket]
     target_s[i] = [x[1] for x in pocket]
     feature_names[i] = dataset.feature_names
