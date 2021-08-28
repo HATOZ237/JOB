@@ -1,45 +1,37 @@
-import sklearn
 from random import *
-from matplotlib import  pyplot as plt
 import numpy as np
-from sklearn.linear_model import LinearRegression
-from sklearn.svm import SVR, SVC, LinearSVC
-from sklearn.neighbors import KNeighborsClassifier
-from numpy.linalg import *
-from sklearn.datasets import *
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split, validation_curve, cross_val_score, StratifiedKFold, KFold
-from sklearn.preprocessing import StandardScaler, RobustScaler
-from sklearn.pipeline import make_pipeline
-import seaborn as sns
-import pandas as pd
-from time import time
-import scipy.stats as stats
-from sklearn.utils.fixes import loguniform
-from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
-from sklearn.linear_model import SGDClassifier
+import multiprocessing
 import random
+from random import *
+from time import time
+
+import numpy as np
+import pandas as pd
 from deap import algorithms
 from deap import base
+from deap import cma
 from deap import creator
 from deap import tools
-from statistics import *
-from deap import cma
+from sklearn.datasets import *
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.preprocessing import StandardScaler
 import pickle
 
+
 np.random.seed(100000)
-datasets = [load_breast_cancer(), load_digits(), load_iris(), load_wine()]#, load_linnerud
-names = ['load_breast_cancer', 'load_digits', 'load_iris', "load_wine"]# 'load_linnerud'
+datasets = [load_breast_cancer(), load_digits(), load_iris(), load_wine()]  # , load_linnerud
+names = ['load_breast_cancer', 'load_digits', 'load_iris', "load_wine"]  # 'load_linnerud'
 data_s = [None for i in range(len(datasets))]
 target_s = [None for i in range(len(datasets))]
 target_names = [None for i in range(len(datasets))]
 feature_names = [None for i in range(len(datasets))]
-description  = [None for i in range(len(datasets))]
+description = [None for i in range(len(datasets))]
 for i, dataset in enumerate(datasets):
     data_s[i] = dataset.data
     target_s[i] = dataset.target
     pocket = list(zip(data_s[i], target_s[i]))
-   # print(pocket)
+    # print(pocket)
     np.random.shuffle(pocket)
     data_s[i] = [x[0] for x in pocket]
     target_s[i] = [x[1] for x in pocket]
@@ -48,50 +40,56 @@ for i, dataset in enumerate(datasets):
     target_names[i] = dataset.target_names
 
 n_iter = 0
-func_seq = [lambda:random.gauss(0,0.5), lambda:random.random(), lambda:random.gauss(0, 0.5)]
+func_seq = [lambda: random.gauss(0, 0.5), lambda: random.random(), lambda: random.gauss(0, 0.5)]
 
-x_train, x_test, y_train, y_test = [0]*4
+x_train, x_test, y_train, y_test = [0] * 4
 
-kernel = ["linear", "rbf", "poly","sigmoid"]
+kernel = ["linear", "rbf", "poly", "sigmoid"]
 
-creator.create("FitnessMax", base.Fitness, weights=(1.0,)) #Add a comma even if there is only one argument
+creator.create("FitnessMax", base.Fitness, weights=(1.0,))  # Add a comma even if there is only one argument
 creator.create("Individual", list, fitness=creator.FitnessMax)
 toolbox = base.Toolbox()
 # Attribute generator
 # Structure initializers
-toolbox.register("individual", tools.initCycle, creator.Individual, 
-    func_seq, n=1)
-toolbox.register("population", tools.initRepeat, list, toolbox.individual)                       
+toolbox.register("individual", tools.initCycle, creator.Individual,
+                 func_seq, n=1)
+toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
 toolbox.register("mate", tools.cxTwoPoint)
-toolbox.register("mutate", tools.mutGaussian,mu = 0,sigma = 0.5, indpb=0.02)
+toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=0.5, indpb=0.02)
 toolbox.register("select", tools.selBest)
 
 
 def evalOneMax(value):
-    #print("ICI")
-    if value[0]>1:
+    # print("ICI")
+    if value[0] > 1:
         value[0] = random()
-    if value[2]>1:
+    if value[2] > 1:
         value[2] = random()
-    model = KNeighborsClassifier(n_neighbors=round(abs(value[0])*40)+1, p=round(abs(value[1])*5)+1, leaf_size=round(abs(value[2]*30))+1, n_jobs=-1)
-    scores = cross_val_score(model, x_train, y_train, cv = 3, n_jobs=--1)
-    return scores.mean(), #Add a comma even if there is only one return value
+    model = KNeighborsClassifier(n_neighbors=round(abs(value[0]) * 40) + 1, p=round(abs(value[1]) * 5) + 1,
+                                 leaf_size=round(abs(value[2] * 30)) + 1, n_jobs=-1)
+    scores = cross_val_score(model, x_train, y_train, cv=3, n_jobs=--1)
+    return scores.mean(),  # Add a comma even if there is only one return value
+
 
 def score(value):
-    if value[0]>1:
+    if value[0] > 1:
         value[0] = random()
-    if value[2]>1:
+    if value[2] > 1:
         value[2] = random()
-    model = KNeighborsClassifier(n_neighbors=round(abs(value[0])*40)+1, p=round(abs(value[1])*5)+1, leaf_size=round(abs(value[2])*30)+1, n_jobs=-1)
+    model = KNeighborsClassifier(n_neighbors=round(abs(value[0]) * 40) + 1, p=round(abs(value[1]) * 5) + 1,
+                                 leaf_size=round(abs(value[2]) * 30) + 1, n_jobs=-1)
     model.fit(x_train, y_train)
     return model.score(x_test, y_test)
+
 
 tab = {}
 for i in range(len(names)):
     tab[names[i]] = [[0 for _ in range(10)] for k in range(10)]
 
 f = lambda x: x[0]
+
+
 # calcul des performances
 def main(idi):
     cma_results = {}
@@ -100,11 +98,12 @@ def main(idi):
     for k in range(10):
         for i in range(len(datasets)):
             global x_train, x_test, y_train, y_test
-            x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75, random_state=0)
+            x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75,
+                                                                random_state=0)
             x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
             toolbox.register("evaluate", evalOneMax)
-            #pool = multiprocessing.Pool()
-            #toolbox.register("map", pool.map)
+            # pool = multiprocessing.Pool()
+            # toolbox.register("map", pool.map)
             # pop = toolbox.population(n=10*N)
             # print(pop)
             # hof1 = tools.HallOfFame(50)
@@ -137,9 +136,9 @@ def main(idi):
             if best_score[i] < max(train_liste):
                 best_score[i] = max(train_liste)
             cma_results[names[i]] = {
-                                     "max_train_score": best_score[i], 'test_score': score(best2),
-                                     "train_score": np.mean(train_liste), "std_train": np.std(train_liste),
-                                     "Time": times[i]}
+                "max_train_score": best_score[i], 'test_score': score(best2),
+                "train_score": np.mean(train_liste), "std_train": np.std(train_liste),
+                "Time": times[i]}
             global tab
             print(best_score[i])
             tab[names[i]][k][idi] = best_score[i]
