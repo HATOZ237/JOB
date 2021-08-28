@@ -79,7 +79,7 @@ def evalOne(value):
     learning_rate = ["constant", 'optimal', 'adaptive', 'invscaling']
     model = SGDClassifier(n_jobs=-1, eta0=0.00001, loss=loss[round(abs(value[0] * 4)) % 4],
                           learning_rate=learning_rate[round(abs(value[1] * 3)) % 3], l1_ratio=abs(value[2] % 1),
-                          alpha=10 ** (-3 * value[3] - 1))
+                          alpha=10 ** (-4 * value[3]))
     scores = cross_val_score(model, x_train, y_train, cv=3, n_jobs=-1)
     return scores.mean(),  # Add a comma even if there is only one return value
 
@@ -142,7 +142,7 @@ def main(idi):
                 best_score[i] = max(train_liste)
             cma_results[names[i]] = {'loss': loss[round(abs(best2[0] * 4)) % 4],
                                      "learning_rate": learning_rate[round(abs(best2[1] * 3)) % 3], 'l1_ratio': abs(best2[2] % 1),
-                                     "alpha": 10 ** (-3 * best2[3] - 1),
+                                     "alpha": 10 ** (-4 * best2[3] ),
                                      "max_train_score": best_score[i], 'test_score': score(best2),
                                      "train_score": np.mean(train_liste), "std_train": np.std(train_liste),
                                      "Time": times[i]}
