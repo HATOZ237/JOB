@@ -6,6 +6,7 @@ from time import time
 import numpy as np
 from deap import base
 from deap import creator
+from deap import tools
 from sklearn.datasets import *
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, cross_val_score
@@ -54,8 +55,8 @@ def main(ngen):
 
     # random.seed(64)
 
-    # logbook = tools.Logbook()
-    # logbook.header = "gen", "fitness", 'loss', 'alpha', 'l1_ratio',"learning_rate", "score"
+    logbook = tools.Logbook()
+    logbook.header = "gen", "fitness"
 
     # interval = (-3,7)
     func = [gauss(0, 0.5), gauss(0, 0.5), gauss(0, 0.4)]
@@ -78,8 +79,8 @@ def main(ngen):
             best, worst = worst, best
         else:
             sigma = sigma * alpha ** (-0.25)
-            # logbook.record(gen=g, fitness=best.fitness.values[0], loss=loss[round(abs(best[0]*6))%5], learning_rate=learning_rate[round(abs(best[1]*5))%4], l1_ratio=abs(best[2]%1), alpha=10**(-3*best[3]), score=score(best))
-        # print(logbook.stream)
+            logbook.record(gen=g, fitness=best.fitness.values[0])
+            print(logbook.stream)
     # print("Fin de l'algorithme en "+ str(n_iter)+" tours")
     if best_score < best.fitness.values[0]:
         best_score = best.fitness.values[0]
@@ -125,7 +126,6 @@ if __name__ == "__main__":
         np.random.seed(randint(1, 100000))
         print(f"{k + 1} essais ")
         for total in range(10):
-            print(f"{total + 1} essais ")
             for i in range(len(datasets)):
                 x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False,
                                                                     train_size=0.75, random_state=0)
