@@ -38,7 +38,7 @@ def score(value):
 
 def update(ind, mu, std):
     for i, mu_i in enumerate(mu):
-        ind[i] = random.gauss(mu_i,std)
+        ind[i] = gauss(mu_i,std)
  
 
 creator.create("FitnessMin", base.Fitness, weights=(1.0,))
