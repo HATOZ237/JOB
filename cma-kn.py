@@ -65,6 +65,8 @@ def evalOneMax(value):
         value[0] = random()
     if abs(value[2]) > 1:
         value[2] = random()
+    if abs(value[1]) > 1:
+        value[1] = random()
     model = KNeighborsClassifier(n_neighbors=round(abs(value[0]) * 40) + 1, p=round(abs(value[1]) * 5) + 1,
                                  leaf_size=round(abs(value[2] * 30)) + 1, n_jobs=1)
     scores = cross_val_score(model, x_train, y_train, cv=3, n_jobs=1)
@@ -76,6 +78,8 @@ def score(value):
         value[0] = random()
     if abs(value[2]) > 1:
         value[2] = random()
+    if abs(value[1]) > 1:
+        value[1] = random()
     model = KNeighborsClassifier(n_neighbors=round(abs(value[0]) * 40) + 1, p=round(abs(value[1]) * 5) + 1,
                                  leaf_size=round(abs(value[2]) * 30) + 1, n_jobs=1)
     model.fit(x_train, y_train)
