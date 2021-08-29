@@ -67,7 +67,7 @@ def evalOneMax(value):
         value[2] = random()
     if abs(value[1]) > 1:
         value[1] = random()
-    print(value)
+    #print(value)
     model = KNeighborsClassifier(n_neighbors=round(abs(value[0]) * 40) + 1, p=round(abs(value[1]) * 5) + 1,
                                  leaf_size=round(abs(value[2] * 30)) + 1, n_jobs=1)
     scores = cross_val_score(model, x_train, y_train, cv=3, n_jobs=1)
@@ -130,13 +130,14 @@ def main(idi):
 
             # print("--------turn : "+ str(k+1)+"---------")
             start = time()
+            print("YES")
             pops = algorithms.eaGenerateUpdate(toolbox, ngen=NGEN, stats=stats, halloffame=hof2, verbose=True)
             times[i] = times[i] + time() - start
             best2 = hof2[0]
             pops = hof2
             scores = toolbox.map(toolbox.evaluate, hof2)
             train_liste = list(map(f, scores))
-            #print(train_liste)
+            print("good")
             if best_score[i] < max(train_liste):
                 best_score[i] = max(train_liste)
             cma_results[names[i]] = {
