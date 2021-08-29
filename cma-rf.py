@@ -62,15 +62,15 @@ toolbox.register("individual", tools.initCycle, creator.Individual,
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
 toolbox.register("mate", tools.cxTwoPoint)
-toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=0.3, indpb=0.05)
+toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=0.2, indpb=0.05)
 toolbox.register("select", tools.selBest)
 f = lambda x: x[0]
 
 def evalOneMax(value):
     if abs(value[2]) > 1:
         value[2] = random()
-    model = RandomForestClassifier(n_estimators=round(abs(value[2]) * 100) + 1, max_features=abs(value[0]) % 1,
-                                   max_samples=abs(value[1]) % 1, n_jobs=1)
+    model = RandomForestClassifier(n_estimators=round(abs(value[2]) * 100) + 1, max_features=abs(value[0]) % 1 + 0.001,
+                                   max_samples=abs(value[1]) % 1 + 0.001, n_jobs=1)
     scores = cross_val_score(model, x_train, y_train, cv=3, n_jobs=1)
     return scores.mean(),  # Add a comma even if there is only one return value
 
@@ -78,7 +78,7 @@ def evalOneMax(value):
 def score(value):
     if abs(value[2]) > 1:
         value[2] = random()
-    model = RandomForestClassifier(n_estimators=round(abs(value[2]) * 100) + 1, max_features=abs(value[0]) % 1,
+    model = RandomForestClassifier(n_estimators=round(abs(value[2]) * 99) + 1, max_features=abs(value[0]) % 1,
                                    max_samples=abs(value[1]) % 1, n_jobs=-1)
     model.fit(x_train, y_train)
     return model.score(x_test, y_test)
