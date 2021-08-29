@@ -79,8 +79,8 @@ def main(ngen):
             best, worst = worst, best
         else:
             sigma = sigma * alpha ** (-0.25)
-            logbook.record(gen=g, fitness=best.fitness.values[0])
-            print(logbook.stream)
+    logbook.record(gen=g, fitness=best.fitness.values[0])
+    print(logbook.stream)
     # print("Fin de l'algorithme en "+ str(n_iter)+" tours")
     if best_score < best.fitness.values[0]:
         best_score = best.fitness.values[0]
@@ -89,7 +89,7 @@ def main(ngen):
     # print("Fin de l'algorithme en "+ str(n_iter)+" tours")
     start = time() - start
 
-    return save, start
+    return best_score, start
 
 
 if __name__ == "__main__":
@@ -131,9 +131,9 @@ if __name__ == "__main__":
                                                                     train_size=0.75, random_state=0)
                 #x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
                 best, time1 = main(200)
-                train_score = evalOneMax(best)[0]
-                if best_score[i] < train_score:
-                    best_score[i] = train_score
+
+                if best_score[i] < best:
+                    best_score[i] = best
                     best2[i] = best
                 # start[i] = start[i] + time1
                 tab[names[i]][total][k] = best_score[i]

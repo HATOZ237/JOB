@@ -74,7 +74,7 @@ def main(ngen, id):
     #logbook.header = "gen", "fitness", 'loss', 'alpha', 'l1_ratio',"learning_rate", "score"
 
     #interval = (-3,7)
-    func = [random.gauss(0,1), random.random(), random.gauss(0, 0.6)]
+    func = [random(), random(), random()]
     mu = func
     sigma = 0.5
     alpha = 2.0**(1.0/IND_SIZE)
@@ -104,7 +104,6 @@ def main(ngen, id):
     #return best, start
     
 if __name__ == "__main__":
-    random.seed(100000)
     np.random.seed(100000)
     datasets = [load_breast_cancer(), load_digits(), load_iris(), load_wine()]#, load_linnerud
     names = ['load_breast_cancer', 'load_digits', 'load_iris', "load_wine"]# 'load_linnerud'
@@ -118,7 +117,7 @@ if __name__ == "__main__":
         target_s[i] = dataset.target
         pocket = list(zip(data_s[i], target_s[i]))
        # print(pocket)
-        shuffle(pocket)
+        np.random.shuffle(pocket)
         data_s[i] = [x[0] for x in pocket]
         target_s[i] = [x[1] for x in pocket]
         feature_names[i] = dataset.feature_names
