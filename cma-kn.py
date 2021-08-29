@@ -111,7 +111,7 @@ def main(idi):
             # pop = toolbox.population(n=10*N)
             # print(pop)
             # hof1 = tools.HallOfFame(50)
-            hof2 = tools.HallOfFame(25)
+            hof2 = tools.HallOfFame(50)
             stats = tools.Statistics(lambda ind: ind.fitness.values)
             stats.register("avg", np.mean)
             stats.register("std", np.std)
@@ -136,7 +136,7 @@ def main(idi):
             pops = hof2
             scores = toolbox.map(toolbox.evaluate, hof2)
             train_liste = list(map(f, scores))
-            print(train_liste)
+            #print(train_liste)
             if best_score[i] < max(train_liste):
                 best_score[i] = max(train_liste)
             cma_results[names[i]] = {
