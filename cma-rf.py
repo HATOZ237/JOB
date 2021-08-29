@@ -69,8 +69,10 @@ f = lambda x: x[0]
 def evalOneMax(value):
     if abs(value[2]) > 1:
         value[2] = random()
-    model = RandomForestClassifier(n_estimators=round(abs(value[2]) * 100) + 1, max_features=abs(value[0]) % 1 + 0.001,
-                                   max_samples=abs(value[1]) % 1 + 0.001, n_jobs=1)
+    if abs(value[0]) > 1:
+        value[0] = random()
+    model = RandomForestClassifier(n_estimators=round(abs(value[2]) * 99) + 1, max_features=abs(value[0]),
+                                   max_samples=abs(value[1]) , n_jobs=1)
     scores = cross_val_score(model, x_train, y_train, cv=3, n_jobs=1)
     return scores.mean(),  # Add a comma even if there is only one return value
 
@@ -78,8 +80,8 @@ def evalOneMax(value):
 def score(value):
     if abs(value[2]) > 1:
         value[2] = random()
-    model = RandomForestClassifier(n_estimators=round(abs(value[2]) * 99) + 1, max_features=abs(value[0]) % 1,
-                                   max_samples=abs(value[1]) % 1, n_jobs=-1)
+    model = RandomForestClassifier(n_estimators=round(abs(value[2]) * 99) + 1, max_features=abs(value[0]),
+                                   max_samples=abs(value[1]), n_jobs=-1)
     model.fit(x_train, y_train)
     return model.score(x_test, y_test)
 
@@ -132,8 +134,8 @@ def main(idi):
             print(train_liste)
             if best_score[i] < max(train_liste):
                 best_score[i] = max(train_liste)
-            cma_results[names[i]] = {'n_estimators': round(abs(best2[2]) * 100) + 1, "max_features": abs(best2[0]) % 1,
-                                     'max_samples': abs(best2[1]) % 1,
+            cma_results[names[i]] = {'n_estimators': round(abs(best2[2]) * 99) + 1, "max_features": abs(best2[0]),
+                                     'max_samples': abs(best2[1]),
                                      "max_train_score": best_score[i], 'test_score': score(best2),
                                      "train_score": np.mean(train_liste), "std_train": np.std(train_liste),
                                      "Time": times[i]}
