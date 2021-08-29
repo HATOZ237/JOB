@@ -71,6 +71,8 @@ def evalOneMax(value):
         value[2] = random()
     if abs(value[0]) > 1:
         value[0] = random()
+    if abs(value[1]) > 1:
+        value[1] = random()
     model = RandomForestClassifier(n_estimators=round(abs(value[2]) * 99) + 1, max_features=abs(value[0]),
                                    max_samples=abs(value[1]) , n_jobs=1)
     scores = cross_val_score(model, x_train, y_train, cv=3, n_jobs=1)
@@ -80,6 +82,10 @@ def evalOneMax(value):
 def score(value):
     if abs(value[2]) > 1:
         value[2] = random()
+    if abs(value[0]) > 1:
+        value[0] = random()
+    if abs(value[1]) > 1:
+        value[1] = random()
     model = RandomForestClassifier(n_estimators=round(abs(value[2]) * 99) + 1, max_features=abs(value[0]),
                                    max_samples=abs(value[1]), n_jobs=-1)
     model.fit(x_train, y_train)
