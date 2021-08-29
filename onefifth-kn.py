@@ -1,33 +1,21 @@
-import sklearn
-from random import *
-#from matplotlib import  pyplot as plt
-import numpy as np
-from sklearn.linear_model import LinearRegression
-from sklearn.svm import SVR, SVC, LinearSVC
+
 from sklearn.neighbors import KNeighborsClassifier
-from numpy.linalg import *
-from sklearn.datasets import *
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split, validation_curve, cross_val_score
-from sklearn.preprocessing import StandardScaler, RobustScaler
-from sklearn.pipeline import make_pipeline
-import seaborn as sns
-import pandas as pd
+import multiprocessing
+import pickle
+from multiprocessing import Process
+from random import *
 from time import time
-import scipy.stats as stats
-from sklearn.utils.fixes import loguniform
-from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
-from sklearn.linear_model import SGDClassifier
-import random
-from deap import algorithms
+
+# from matplotlib import  pyplot as plt
+import numpy as np
 from deap import base
 from deap import creator
 from deap import tools
-from statistics import *
-from deap import cma
+from sklearn.datasets import *
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.preprocessing import StandardScaler
 import multiprocessing
-from multiprocessing import Process
-import pickle
 
 
     
