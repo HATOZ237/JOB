@@ -81,7 +81,7 @@ def main(id):
     # print(worst)
     best_score = 0
     save = 0
-    NGEN = 100
+    NGEN = 200
     for g in range(NGEN):
         toolbox.update(worst, best, sigma)
         worst.fitness.values = toolbox.evaluate(worst)
