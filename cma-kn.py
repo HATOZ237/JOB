@@ -61,10 +61,9 @@ toolbox.register("select", tools.selBest)
 
 
 def evalOneMax(value):
-    # print("ICI")
-    if value[0] > 1:
+    if abs(value[0]) > 1:
         value[0] = random()
-    if value[2] > 1:
+    if abs(value[2]) > 1:
         value[2] = random()
     model = KNeighborsClassifier(n_neighbors=round(abs(value[0]) * 40) + 1, p=round(abs(value[1]) * 5) + 1,
                                  leaf_size=round(abs(value[2] * 30)) + 1, n_jobs=1)
@@ -73,9 +72,9 @@ def evalOneMax(value):
 
 
 def score(value):
-    if value[0] > 1:
+    if abs(value[0]) > 1:
         value[0] = random()
-    if value[2] > 1:
+    if abs(value[2]) > 1:
         value[2] = random()
     model = KNeighborsClassifier(n_neighbors=round(abs(value[0]) * 40) + 1, p=round(abs(value[1]) * 5) + 1,
                                  leaf_size=round(abs(value[2]) * 30) + 1, n_jobs=1)
