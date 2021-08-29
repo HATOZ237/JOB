@@ -28,7 +28,7 @@ target_names = [None for i in range(len(datasets))]
 feature_names = [None for i in range(len(datasets))]
 description = [None for i in range(len(datasets))]
 for i, dataset in enumerate(datasets):
-    data_s[i] = dataset.data
+    data_s[i] = StandardScaler().fit_transform(dataset.data)
     target_s[i] = dataset.target
     pocket = list(zip(data_s[i], target_s[i]))
     # print(pocket)
@@ -40,7 +40,7 @@ for i, dataset in enumerate(datasets):
     target_names[i] = dataset.target_names
 
 n_iter = 0
-func_seq = [lambda: random.gauss(0, 0.5), lambda: random.random(), lambda: random.gauss(0, 0.5)]
+func_seq = [lambda: random(), lambda: random(), lambda: random()]
 
 x_train, x_test, y_train, y_test = [0] * 4
 
@@ -56,7 +56,7 @@ toolbox.register("individual", tools.initCycle, creator.Individual,
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
 toolbox.register("mate", tools.cxTwoPoint)
-toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=0.5, indpb=0.02)
+toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=0.5, indpb=0.05)
 toolbox.register("select", tools.selBest)
 
 
@@ -100,7 +100,7 @@ def main(idi):
             global x_train, x_test, y_train, y_test
             x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75,
                                                                 random_state=0)
-            x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
+            #x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
             toolbox.register("evaluate", evalOneMax)
             pool = multiprocessing.Pool()
             toolbox.register("map", pool.map)
