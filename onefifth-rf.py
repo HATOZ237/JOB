@@ -1,4 +1,6 @@
+import multiprocessing
 import pickle
+from multiprocessing import Process
 from random import *
 from time import time
 
@@ -11,6 +13,7 @@ from sklearn.datasets import *
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler
+import multiprocessing
 
 kernel = ["linear", "rbf", "poly", "sigmoid"]
 
@@ -37,6 +40,14 @@ def update(ind, mu, std):
     for i, mu_i in enumerate(mu):
         ind[i] = gauss(mu_i, std)
 
+def sorted(liste):
+    best_value = liste[0]
+    for i in range(len(liste)):
+        if best_value < liste[i]:
+            best_value = liste[i]
+        else :
+            liste[i] = best_value
+    return liste
 
 creator.create("FitnessMin", base.Fitness, weights=(1.0,))
 creator.create("Individual", list, fitness=creator.FitnessMin)
@@ -49,14 +60,14 @@ toolbox.register("evaluate", evalOneMax)
 # IND_SIZE = 10
 
 
-def main(ngen):
+def main(id):
     IND_SIZE = 10
     start = time()
 
     # random.seed(64)
 
     logbook = tools.Logbook()
-    logbook.header = "gen", "fitness"
+    logbook.header = "gen", "fitness", "id"
 
     # interval = (-3,7)
     func = [gauss(0, 0.5), gauss(0, 0.5), gauss(0, 0.4)]
@@ -70,7 +81,7 @@ def main(ngen):
     # print(worst)
     best_score = 0
     save = 0
-    NGEN = ngen
+    NGEN = 100
     for g in range(NGEN):
         toolbox.update(worst, best, sigma)
         worst.fitness.values = toolbox.evaluate(worst)
@@ -79,7 +90,7 @@ def main(ngen):
             best, worst = worst, best
         else:
             sigma = sigma * alpha ** (-0.25)
-    logbook.record(gen=g, fitness=best.fitness.values[0])
+    logbook.record(gen=g, fitness=best.fitness.values[0], id = id)
     print(logbook.stream)
     # print("Fin de l'algorithme en "+ str(n_iter)+" tours")
     if best_score < best.fitness.values[0]:
@@ -89,7 +100,7 @@ def main(ngen):
     # print("Fin de l'algorithme en "+ str(n_iter)+" tours")
     start = time() - start
 
-    return best_score, start
+    scores[id] = best_score
 
 
 if __name__ == "__main__":
@@ -122,29 +133,37 @@ if __name__ == "__main__":
     best_score = [0] * 4
     best2 = [0] * 4
     process = [0 for _ in range(turn)]
+
     for k in range(10):
+        scores = multiprocessing.Array('d', 10)
         np.random.seed(randint(1, 100000))
         print(f"{k + 1} essais ")
-        for total in range(10):
-            for i in range(len(datasets)):
-                x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False,
-                                                                    train_size=0.75, random_state=0)
-                #x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
-                best, time1 = main(200)
+        for i in range(len(datasets)):
+            x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False,
+                                                                train_size=0.75, random_state=0)
+            # x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
+            for x in range(turn):
+                process[x] = Process(target = main, args = (x))
+            start = time()
+            for x in range(turn):
+                process[x].start()
+            for x in range(turn):
+                process[x].join()
+            #best, time1 = main(200)
 
-                if best_score[i] < best:
-                    best_score[i] = best
-                    best2[i] = best
-                # start[i] = start[i] + time1
-                tab[names[i]][total][k] = best_score[i]
-                """one_results[names[i]] = {"kernel": kernel[round(best2[i][2] % 3)], "C": 10 ** (-4 * best2[i][0] + 4),
-                                         'gamma': 10 ** (-7.5 * abs(best2[i][1]) + 2.5),
-                                         "test_score": score(best2[i]),
-                                         "train_score": best_score[i],
-                                         "Time": start[i]}
-            pd.DataFrame(one_results).to_csv(f"ONEFIFTH-SVC-{(total + 1) * 25}")"""
-    file_name = "ONE-TAB-RF"
-    outfile = open(file_name, "wb")
-    print(tab)
-    pickle.dump(tab, outfile)
-    outfile.close()
+            """if best_score[i] < best:
+                best_score[i] = best
+                best2[i] = best"""
+            # start[i] = start[i] + time1
+            tab[names[i]][k] = list(sorted(scores))
+            """one_results[names[i]] = {"kernel": kernel[round(best2[i][2] % 3)], "C": 10 ** (-4 * best2[i][0] + 4),
+                                     'gamma': 10 ** (-7.5 * abs(best2[i][1]) + 2.5),
+                                     "test_score": score(best2[i]),
+                                     "train_score": best_score[i],
+                                     "Time": start[i]}
+        pd.DataFrame(one_results).to_csv(f"ONEFIFTH-SVC-{(total + 1) * 25}")"""
+file_name = "ONE-TAB-RF"
+outfile = open(file_name, "wb")
+print(tab)
+pickle.dump(tab, outfile)
+outfile.close()
