@@ -104,7 +104,7 @@ if __name__ == "__main__":
     for i in range(len(names)):
         tab[names[i]] = [[0 for _ in range(10)] for k in range(10)]
     for i, dataset in enumerate(datasets):
-        data_s[i] = dataset.data
+        data_s[i] = StandardScaler().fit_transform(dataset.data)
         target_s[i] = dataset.target
         pocket = list(zip(data_s[i], target_s[i]))
         # print(pocket)
@@ -129,7 +129,7 @@ if __name__ == "__main__":
             for i in range(len(datasets)):
                 x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False,
                                                                     train_size=0.75, random_state=0)
-                x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
+                #x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
                 best, time1 = main(200)
                 train_score = evalOneMax(best)[0]
                 if best_score[i] < train_score:

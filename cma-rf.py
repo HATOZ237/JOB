@@ -30,7 +30,7 @@ target_names = [None for i in range(len(datasets))]
 feature_names = [None for i in range(len(datasets))]
 description = [None for i in range(len(datasets))]
 for i, dataset in enumerate(datasets):
-    data_s[i] = dataset.data
+    data_s[i] = StandardScaler().fit_transform(dataset.data)
     target_s[i] = dataset.target
     pocket = list(zip(data_s[i], target_s[i]))
     # print(pocket)
@@ -97,14 +97,14 @@ def main(idi):
         for i in range(len(datasets)):
             global x_train, x_test, y_train, y_test
             x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
-            x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
+            #x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
             toolbox.register("evaluate", evalOneMax)
             pool = multiprocessing.Pool()
             #toolbox.register("map", pool.map)
             # pop = toolbox.population(n=10*N)
             # print(pop)
             # hof1 = tools.HallOfFame(50)
-            hof2 = tools.HallOfFame(25)
+            hof2 = tools.HallOfFame(10)
             stats = tools.Statistics(lambda ind: ind.fitness.values)
             stats.register("avg", np.mean)
             stats.register("std", np.std)
