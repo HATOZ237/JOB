@@ -68,7 +68,7 @@ def evalOneMax(value):
         value[2] = random()
     model = KNeighborsClassifier(n_neighbors=round(abs(value[0]) * 40) + 1, p=round(abs(value[1]) * 5) + 1,
                                  leaf_size=round(abs(value[2] * 30)) + 1, n_jobs=-1)
-    scores = cross_val_score(model, x_train, y_train, cv=3, n_jobs=--1)
+    scores = cross_val_score(model, x_train, y_train, cv=3, n_jobs=-1)
     return scores.mean(),  # Add a comma even if there is only one return value
 
 
@@ -107,7 +107,7 @@ def main(idi):
             # pop = toolbox.population(n=10*N)
             # print(pop)
             # hof1 = tools.HallOfFame(50)
-            hof2 = tools.HallOfFame(50)
+            hof2 = tools.HallOfFame(25)
             stats = tools.Statistics(lambda ind: ind.fitness.values)
             stats.register("avg", np.mean)
             stats.register("std", np.std)
