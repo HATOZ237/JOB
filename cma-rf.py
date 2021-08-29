@@ -104,7 +104,7 @@ def main(idi):
     for k in range(10):
         for i in range(len(datasets)):
             global x_train, x_test, y_train, y_test
-            x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75)
+            x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i], shuffle=False, train_size=0.75, random_state=0)
             #x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
             toolbox.register("evaluate", evalOneMax)
             pool = multiprocessing.Pool()
@@ -125,7 +125,7 @@ def main(idi):
             time_liste = [0 for _ in range(turn)]
 
             best2 = 0
-            strategy = cma.Strategy(centroid=[random(), random(), random()], sigma=0.3, lambda_=4)
+            strategy = cma.Strategy(centroid=[random(), random(), random()], sigma=0.5, lambda_=4)
             toolbox.register("generate", strategy.generate, creator.Individual)
             toolbox.register("update", strategy.update)
 
