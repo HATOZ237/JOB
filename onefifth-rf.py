@@ -143,7 +143,7 @@ if __name__ == "__main__":
                                                                 train_size=0.75, random_state=0)
             # x_train, x_test = StandardScaler().fit_transform(x_train), StandardScaler().fit_transform(x_test)
             for x in range(turn):
-                process[x] = Process(target = main, args = (x))
+                process[x] = Process(target = main, args = (x,))
             start = time()
             for x in range(turn):
                 process[x].start()
