@@ -82,11 +82,11 @@ for i, (name, data) in enumerate(zip(names, datasets)):
     if(not(target_names[i] is None)):
         print(f"J'ai commencé le traitement du dataset {names[i]}")
         #pre_process = StandardScaler()
-        x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i],shuffle=False, train_size= trainrate)
+        x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i],shuffle=False, train_size= trainrate, random_state=0)
         #x_train, x_test = pre_process.fit_transform(x_train), pre_process.fit_transform(x_test)
         
         #creation des grilles de recherches structurées et aleatoires 
-        grid_t = GridSearchCV(model, param_grid=param_Grid, cv=3, n_jobs=-1, verbose = 1)
+        grid_t = GridSearchCV(model, param_grid=param_Grid, cv=3, n_jobs=-1, verbose = 4)
 
         best = 0
         start = time()
