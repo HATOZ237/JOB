@@ -21,7 +21,7 @@ from sklearn.linear_model import SGDClassifier
 import random
 
 
-random.seed(100000)
+np.random.seed(100000)
 
 datasets = [load_breast_cancer(), load_digits(), load_iris(), load_wine()]#, load_linnerud
 names = ['Breast_cancer', 'Opt_digits', 'Iris', "Wine"]# 'load_linnerud'
@@ -30,8 +30,9 @@ target_s = [None for i in range(len(datasets))]
 target_names = [None for i in range(len(datasets))]
 feature_names = [None for i in range(len(datasets))]
 description  = [None for i in range(len(datasets))]
+pre_process = StandardScaler()
 for i, dataset in enumerate(datasets):
-    data_s[i] = dataset.data
+    data_s[i] = pre_process.fit_transform(dataset.data)
     target_s[i] = dataset.target
     pocket = list(zip(data_s[i], target_s[i]))
    # print(pocket)
@@ -80,9 +81,9 @@ for i, (name, data) in enumerate(zip(names, datasets)):
         # preprocessing 
     if(not(target_names[i] is None)):
         print(f"J'ai commencé le traitement du dataset {names[i]}")
-        pre_process = StandardScaler()
+        #pre_process = StandardScaler()
         x_train, x_test, y_train, y_test = train_test_split(data_s[i], target_s[i],shuffle=False, train_size= trainrate)
-        x_train, x_test = pre_process.fit_transform(x_train), pre_process.fit_transform(x_test)
+        #x_train, x_test = pre_process.fit_transform(x_train), pre_process.fit_transform(x_test)
         
         #creation des grilles de recherches structurées et aleatoires 
         grid_t = GridSearchCV(model, param_grid=param_Grid, cv=3, n_jobs=-1, verbose = 1)
